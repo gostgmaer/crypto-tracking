@@ -6,8 +6,22 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.0",
+    "chart.js": "^4.0.1",
+    "faker": "^6.6.6",
     "react": "^18.2.0",
+    "bootstrap": "^5.2.2",
+    "moment": "^2.29.4",
+    "jwt-decode": "^3.1.2",
+    "json-loader": "^0.5.7",
+    "react-icons": "^4.6.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-toastify": "^9.0.8",
+    "sass": "^1.55.0",
+    "uuid": "^9.0.0",
+    "react-chartjs-2": "^5.0.1",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -33,6 +47,14 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
+    ],
+    "devDependencies": {
+      "@types/faker": "5.5.9",
+      "@types/react": "18.0.25",
+      "@types/react-dom": "18.0.9",
+      "@vitejs/plugin-react": "^2.2.0",
+      "typescript": "4.9.3",
+      "vite": "^3.2.4"
+    }
   }
 }
