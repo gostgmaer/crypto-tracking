@@ -1,266 +1,236 @@
-import React from 'react'
-import './Home.scss'
+import React, { useState } from "react";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Table from "../../Components/Table/Table";
+import useFetch from "../../Context/UseFetch/Usefetch";
+import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import "./Home.scss";
 const Home = () => {
+  const [currency, setCurrency] = useState("USD");
+
+  const { Data, loading, error } = useFetch("coins/markets", "get", "", "", {
+    vs_currency: currency,
+    order: "market_cap_desc",
+    per_page: 10,
+    page: 1,
+    sparkline: false,
+  });
 
 
+
+  const Crypto =()=>{
+
+
+    return  <div class="table-responsive">
+    <table
+      class="table table-striped
+    table-hover	
+    table-borderless
+    table-primary
+    align-middle"
+    >
+      <thead class="table-light">
+        <caption>Top 10 Cryptocurrency</caption>
+        <tr>
+          <th># Coin</th>
+          <th>Price</th>
+          <th>24 hr Change</th>
+          <th>24h Volume</th>
+          <th>Market cap</th>
+          <th>Last 7 days</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {Data?.map((item) => {
+          return (
+            <tr class="" key={item.id}>
+              <td>
+                <Link to={`/coins/:${item.id}`} className=" d-flex nav-link justify-content-start align-items-center">
+                  {item.market_cap_rank}
+                  <img className="m-2"
+                    height={30}
+                    src={item.image}
+                    alt={item.name}
+                  />{" "}
+                  <span className=" h5">{item.name}</span>{" "}
+                </Link>
+              </td>
+              <td>
+                {currency}-{item.current_price}
+              </td>
+              <td>
+                {item.price_change_percentage_24h < 0 ? (
+                  <div className=" text-danger">
+                    <FaArrowDown></FaArrowDown>
+                    <span>{item.price_change_percentage_24h}</span>
+                  </div>
+                ) : (
+                  <div className=" text-success">
+                    <FaArrowUp></FaArrowUp>
+                    <span>{item.price_change_percentage_24h}</span>
+                  </div>
+                )}
+              </td>
+              <td>
+                {currency}-{item.total_volume}
+              </td>
+              <td>
+                {currency}-{item.market_cap}
+              </td>
+              <td>
+                {item.market_cap_change_percentage_24h < 0 ? (
+                  <div className=" text-danger">
+                    <FaArrowDown></FaArrowDown>
+                    <span>
+                      {item.market_cap_change_percentage_24h}
+                    </span>
+                  </div>
+                ) : (
+                  <div className=" text-success">
+                    <FaArrowUp></FaArrowUp>
+                    <span>
+                      {item.market_cap_change_percentage_24h}
+                    </span>
+                  </div>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  }
 
   return (
     <div className=" container-fluid ">
-      
+      <div class="container-fluid">
+        <div class="row">
+          <nav
+            id="sidebarMenu"
+            class="col-md-3 col-lg-2 d-md-block bg-light sidebar d-sticky collapse"
+          >
+            <div class="position-sticky pt-3 text-start">
+              <ul class="nav flex-column text-start">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">
+                    <span data-feather="home"></span>
+                    Dashboard
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file"></span>
+                    Orders
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="shopping-cart"></span>
+                    Products
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="users"></span>
+                    Customers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="bar-chart-2"></span>
+                    Reports
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="layers"></span>
+                    Integrations
+                  </a>
+                </li>
+              </ul>
 
-
-<body>
-
-  <nav  class="navbar container mb-4 navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Company name</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
-      data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"/>
-    <ul class="navbar-nav px-3">
-      <li class="nav-item text-nowrap">
-        <a class="nav-link" href="#">Sign out</a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="container-fluid">
-    <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar d-sticky collapse">
-        <div class="position-sticky pt-3">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
-                <span data-feather="home"></span>
-                Dashboard
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file"></span>
-                Orders
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="shopping-cart"></span>
-                Products
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="users"></span>
-                Customers
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="bar-chart-2"></span>
-                Reports
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="layers"></span>
-                Integrations
-              </a>
-            </li>
-          </ul>
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Saved reports</span>
-            <a class="link-secondary" href="#" aria-label="Add a new report">
-              <span data-feather="plus-circle"></span>
-            </a>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Current month
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Last quarter
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Social engagement
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Year-end sale
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-        <div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Dashboard</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Saved reports</span>
+                <a
+                  class="link-secondary"
+                  href="#"
+                  aria-label="Add a new report"
+                >
+                  <span data-feather="plus-circle"></span>
+                </a>
+              </h6>
+              <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                  <a class="nav-link" href="">
+                    <span data-feather="file-text"></span>
+                    Current month
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Last quarter
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Social engagement
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Year-end sale
+                  </a>
+                </li>
+              </ul>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-              <span data-feather="calendar"></span>
-              This week
-            </button>
+          </nav>
+
+          <div class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+              <h1 class="h2">Dashboard</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary"
+                  >
+                    Share
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary"
+                  >
+                    Export
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                >
+                  <span data-feather="calendar"></span>
+                  This week
+                </button>
+              </div>
+            </div>
+
+            <canvas
+              class="my-4 w-100"
+              id="myChart"
+              width="900"
+              height="380"
+            ></canvas>
+    <Crypto></Crypto>
+           
           </div>
         </div>
-
-        <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-        <h2>Section title</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-              </tr>
-              <tr>
-                <td>1,002</td>
-                <td>amet</td>
-                <td>consectetur</td>
-                <td>adipiscing</td>
-                <td>elit</td>
-              </tr>
-              <tr>
-                <td>1,003</td>
-                <td>Integer</td>
-                <td>nec</td>
-                <td>odio</td>
-                <td>Praesent</td>
-              </tr>
-              <tr>
-                <td>1,003</td>
-                <td>libero</td>
-                <td>Sed</td>
-                <td>cursus</td>
-                <td>ante</td>
-              </tr>
-              <tr>
-                <td>1,004</td>
-                <td>dapibus</td>
-                <td>diam</td>
-                <td>Sed</td>
-                <td>nisi</td>
-              </tr>
-              <tr>
-                <td>1,005</td>
-                <td>Nulla</td>
-                <td>quis</td>
-                <td>sem</td>
-                <td>at</td>
-              </tr>
-              <tr>
-                <td>1,006</td>
-                <td>nibh</td>
-                <td>elementum</td>
-                <td>imperdiet</td>
-                <td>Duis</td>
-              </tr>
-              <tr>
-                <td>1,007</td>
-                <td>sagittis</td>
-                <td>ipsum</td>
-                <td>Praesent</td>
-                <td>mauris</td>
-              </tr>
-              <tr>
-                <td>1,008</td>
-                <td>Fusce</td>
-                <td>nec</td>
-                <td>tellus</td>
-                <td>sed</td>
-              </tr>
-              <tr>
-                <td>1,009</td>
-                <td>augue</td>
-                <td>semper</td>
-                <td>porta</td>
-                <td>Mauris</td>
-              </tr>
-              <tr>
-                <td>1,010</td>
-                <td>massa</td>
-                <td>Vestibulum</td>
-                <td>lacinia</td>
-                <td>arcu</td>
-              </tr>
-              <tr>
-                <td>1,011</td>
-                <td>eget</td>
-                <td>nulla</td>
-                <td>Class</td>
-                <td>aptent</td>
-              </tr>
-              <tr>
-                <td>1,012</td>
-                <td>taciti</td>
-                <td>sociosqu</td>
-                <td>ad</td>
-                <td>litora</td>
-              </tr>
-              <tr>
-                <td>1,013</td>
-                <td>torquent</td>
-                <td>per</td>
-                <td>conubia</td>
-                <td>nostra</td>
-              </tr>
-              <tr>
-                <td>1,014</td>
-                <td>per</td>
-                <td>inceptos</td>
-                <td>himenaeos</td>
-                <td>Curabitur</td>
-              </tr>
-              <tr>
-                <td>1,015</td>
-                <td>sodales</td>
-                <td>ligula</td>
-                <td>in</td>
-                <td>libero</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
+      </div>
     </div>
-  </div>
+  );
+};
 
-
- 
-</body>
-
-
-
-    </div>
-  )
-}
-
-export default Home
+export default Home;

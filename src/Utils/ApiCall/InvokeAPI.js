@@ -7,7 +7,7 @@ const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   const option = {
     method: type,
     url: baseURL + endpoint,
-    headers: { Authorization: `bearer ${token}` },
+    headers: { Authorization: `bearer ${token}`,accept: "application/json" },
     params: queryParam,
     data: body,
   };

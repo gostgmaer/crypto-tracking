@@ -17,8 +17,8 @@ const useFetch = (endpoint, method, header,body, query ) => {
       header,
       query
     );
-
-    SetData(res.data);
+    setloading(true)
+    SetData(res);
     setloading(false);
   };
   return { Data, loading, error };
