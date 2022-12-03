@@ -1,21 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import MYChart from "../../Components/Charts/Charts";
 import Table from "../../Components/Table/Table";
 import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import "./Home.scss";
 const Home = () => {
   const [currency, setCurrency] = useState("USD");
+  const [exchanges, setExchanges] = useState();
+  const [newLoading, setNewLoading] = useState(true);
+  const [count, setCount] = useState(1);
 
   const { Data, loading, error } = useFetch("coins/markets", "get", "", "", {
     vs_currency: currency,
     order: "market_cap_desc",
     per_page: 10,
     page: 1,
-    sparkline: false,
+    sparkline: true,
   });
+  const api = async ()=>{
 
+    const res = await InvokeAPI('exchanges','get','','',{ per_page: 10,
+      page: count,})
+      console.log(res);
+      setExchanges(res)
+      setNewLoading(false)
+  }
+
+  
+  useEffect(()=>{
+   api()
+   
+   
+  },[count])
 
 
   const Crypto =()=>{
@@ -38,6 +56,7 @@ const Home = () => {
           <th>24h Volume</th>
           <th>Market cap</th>
           <th>Last 7 days</th>
+          <th>Last 7</th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -45,7 +64,7 @@ const Home = () => {
           return (
             <tr class="" key={item.id}>
               <td>
-                <Link to={`/coins/:${item.id}`} className=" d-flex nav-link justify-content-start align-items-center">
+                <Link to={`/coins/${item.id}`} className=" d-flex nav-link justify-content-start align-items-center">
                   {item.market_cap_rank}
                   <img className="m-2"
                     height={30}
@@ -94,6 +113,93 @@ const Home = () => {
                   </div>
                 )}
               </td>
+              <td className="crypto-chirt">
+               <MYChart myData={item.sparkline_in_7d.price} ></MYChart>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  }
+  const Exchanges =()=>{
+  
+
+
+    return  <div class="table-responsive">
+    <table
+      class="table table-striped
+    table-hover	
+    table-borderless
+    table-primary
+    align-middle"
+    >
+      <thead class="table-light">
+        <caption>Top 10 Exchanges</caption>
+        <tr>
+          <th># Exchanges</th>
+          <th>Country</th>
+          <th>Trust Score</th>
+          <th>24h Volume</th>
+          <th>Market cap</th>
+         
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {newLoading?'':  exchanges.length>0 && exchanges.map((item) => {
+          return (
+            <tr class="" key={item.id}>
+              <td>
+                <Link to={`/exchanges/${item.id}`} className=" d-flex nav-link justify-content-start align-items-center">
+                  {item.trust_score_rank}
+                  <img className="m-2"
+                    height={30}
+                    src={item.image}
+                    alt={item.name}
+                  />{" "}
+                  <span className=" h5">{item.name}</span>{" "}
+                </Link>
+              </td>
+              <td>
+                {item.country}
+              </td>
+              <td>
+                {item.trust_score < 8 ? (
+                  <div className=" text-danger">
+                    <FaArrowDown></FaArrowDown>
+                    <span>{item.trust_score}</span>
+                  </div>
+                ) : (
+                  <div className=" text-success">
+                    <FaArrowUp></FaArrowUp>
+                    <span>{item.trust_score}</span>
+                  </div>
+                )}
+              </td>
+              <td>
+                {item.has_trading_incentive?'True':'False'}
+              </td>
+              
+              <td>
+                {item.trade_volume_24h_btc_normalized < 0 ? (
+                  <div className=" text-danger">
+                    <FaArrowDown></FaArrowDown>
+                    <span>
+                      {item.trade_volume_24h_btc_normalized.toFixed(2)}
+                    </span>
+                  </div>
+                ) : (
+                  <div className=" text-success">
+                    <FaArrowUp></FaArrowUp>
+                    <span>
+                      {item.trade_volume_24h_btc_normalized.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+              </td>
+             
             </tr>
           );
         })}
@@ -225,6 +331,7 @@ const Home = () => {
               height="380"
             ></canvas>
     <Crypto></Crypto>
+   {newLoading?'':<Exchanges></Exchanges>}
            
           </div>
         </div>

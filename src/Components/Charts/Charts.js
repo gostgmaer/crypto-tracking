@@ -30,26 +30,49 @@ const MYChart= ( {title,myData} )=>{
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' ,
-      },
-      title: {
-        display: true,
-        text: title,
-      },
+       display:false
+      }, tooltip: {
+        enabled: false,
+        TooltipItem:{
+          enabled:false
+        }
+      }
+      
+     
     },
+   
+    scales: {
+      y: {
+          display: false // Hide Y axis labels
+      },
+      x: {
+          display: false // Hide X axis labels
+      }
+  }  
   };
   
 
-
+// const  options: {
+//     legend: {
+//         display: false
+//     },
+//     tooltips: {
+//         callbacks: {
+//            label: function(tooltipItem) {
+//                   return tooltipItem.yLabel;
+//            }
+//         }
+//     }
+// }
 
   const data = {
-    labels: myarray,
+    labels: myData,
     datasets: [
       {
-        label: "My First dataset",
-        backgroundColor: "#f1f1f1",
-        borderColor: "#000",
-        data: myarray,
+      
+        backgroundColor: "#11182755",
+        borderColor: "#A1C9D7",
+        data: myData,
         fill:true
       },
     ],

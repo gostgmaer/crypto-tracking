@@ -14,6 +14,7 @@ import useFetch from "../../Context/UseFetch/Usefetch";
 
 const CoinDetails = () => {
   const [currency, setCurrency] = useState("USD");
+  const [checkNUll, setcheckNUll] = useState(NaN);
 
   const id = useParams().id;
 
@@ -244,6 +245,21 @@ const InfoCard = ()=>{
 </div>
 }
 
+  const NoCoinData = ()=>{
+
+   
+    return <div class="card text-center">
+    <div class="card-header">
+      No Data Found
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Special title treatment</h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a class="btn btn-primary btn-sm " href="/" role="button">Home</a>
+    </div>
+   
+  </div>
+  }
 
   return (
     <article className="  rounded-4 mb-5 container bg-black">
@@ -256,6 +272,7 @@ const InfoCard = ()=>{
                 {loading?<Bars width={''}></Bars>:<Description></Description>}
         </div>
       </div>
+      {  Data===null&&<NoCoinData></NoCoinData>}
     </article>
   );
 };
