@@ -21,6 +21,8 @@ import MYChart from "../../Components/Charts/Charts";
 // import CoinDetailsChart from "./CoinDetailsChart";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import moment from "moment/moment";
+import ExchangeCharts from './ExchangesChart';
+
 
 const ExchangeDetails = () => {
 
@@ -29,11 +31,11 @@ const ExchangeDetails = () => {
   const [coinDetails, setCoinDetails] = useState();
   const [newloading, setNewloading] = useState(true);
   const [openTab, setOpenTab] = useState(0);
-  const [days, setdays] = useState(90);
+  const [days, setdays] = useState(365);
   const id = useParams().id;
 const [exchangeDetails, setExchangeDetails] = useState();
 
-
+const DaysData =['24H','7d','14d','30d','90d','200d','365d','1000d','max']
 
 
 
@@ -63,7 +65,18 @@ const [exchangeDetails, setExchangeDetails] = useState();
     exchangeMarket();
   }, [id,days,currency]);
 
-
+  const selectDays = (e)=>{
+    let data = e.target.innerHTML
+    data==='24H'&&setdays(1)
+    if (data==='7d'||data==='14d'||data==='30d'||data==='90d'||data==='200d'||data==='365d'||data==='1000d') {
+      data = data.replace('d', '');
+     // console.log(data);
+      setdays(data)
+    }
+    data==='max'&&setdays('2000')
+  //  console.log(data);
+    console.log(days);
+  }
 
 
   const MarketDataContainer = () => {
@@ -321,7 +334,39 @@ const [exchangeDetails, setExchangeDetails] = useState();
   };
 
 
-
+  const ExchangesData = () => {
+    return (
+     <div className=" col-12 p-3 m-2 rounded bg-light">
+      <div className=" d-flex justify-content-between align-items-center">
+      <div>
+       <span className=' h4'>{Data?.name} Volume Chart </span>
+        </div>
+      <div>
+        <ul class="nav d-flex justify-content-between align-items-center">
+          {DaysData?.map((item)=><li class="nav-item btn border  m-1" onClick={selectDays}>{item}</li>)}
+        </ul>
+        </div>
+      </div>
+    
+      <div>
+       <div className="col-12">
+        
+        {loading ? (
+          <TailSpin width={""}></TailSpin>
+        ) : (
+          <ExchangeCharts
+            label={exchangeDetails?.map((item) =>
+              moment(item[0]).format("MM/DD/YYYY")
+            )} title={'Volumes Data Charts'} dataSetlabel={currency}
+            ChartData={exchangeDetails?.map((item) => item[1])}
+          ></ExchangeCharts>
+        )}
+      </div>
+      </div>
+     
+     </div>
+    );
+  };
 
 
 
@@ -343,18 +388,12 @@ const [exchangeDetails, setExchangeDetails] = useState();
         <React.Fragment>
           {loading ? <TailSpin width={""}></TailSpin> : <InfoCard />}
         </React.Fragment>
-        {/* <CoinTabs/> */}
+        <ExchangesData></ExchangesData>
         <React.Fragment>
           {loading ? <TailSpin width={""}></TailSpin> : <MarketDataContainer />}{" "}
         </React.Fragment>
 
-        {/* <div className=" text-start">
-          {loading ? (
-            <TailSpin width={""}></TailSpin>
-          ) : (
-            <Description></Description>
-          )}
-        </div> */}
+    
       
       </div>
       {Data === null && <NoCoinData></NoCoinData>}

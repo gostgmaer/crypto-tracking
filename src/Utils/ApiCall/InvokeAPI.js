@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import {  notifyerror } from "../Notifications/Notice";
 
 const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   const baseURL = process.env.REACT_APP_BASE_URL;
@@ -17,6 +18,8 @@ const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   try {
     response = await axios.request(option);
   } catch (e) {
+    console.log(e);
+    notifyerror('Error',2000)
     error = e.message;
     throw new Error(e.message);
   }
