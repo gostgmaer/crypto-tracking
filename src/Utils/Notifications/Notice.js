@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./styles.scss";
+import "./Notice.scss";
 const notifySuccess = (_message, _duration) => {
   toast.success(_message, {
     position: "top-right",

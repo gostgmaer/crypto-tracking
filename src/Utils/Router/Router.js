@@ -19,13 +19,14 @@ const Router = () => {
   return (
   
         <Routes>
-            <Route path='/' element={<Home></Home>} ></Route>
+            {/* <Route path='/' element={<Home></Home>} ></Route> */}
+            <Route path='/dashboard' element={<Home></Home>} ></Route>
             <Route path='/coins' element={<Coins></Coins>}></Route>
             <Route path='/coins/:id' element={<CoinDetails></CoinDetails>}></Route>
             <Route path='/exchanges' element={<Exchanges></Exchanges>}></Route>
             <Route path='/exchanges/:id' element={<ExchangeDetails></ExchangeDetails>}></Route>
             <Route path='/profile' element={<Profile></Profile>}></Route>
-            <Route path='/login' element={<Login></Login>}></Route>
+            <Route path='/' element={<Login></Login>}></Route>
             <Route path='/signup' element={<Registration></Registration>}></Route>
             <Route path='/wallet' element={<Wallet></Wallet>}></Route>
             <Route path='/about' element={<About></About>}></Route>

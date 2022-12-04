@@ -30,7 +30,6 @@ const CoinDetails = () => {
   const [newloading, setNewloading] = useState(true);
   const [openTab, setOpenTab] = useState(0);
   const [days, setdays] = useState(90);
-
   const id = useParams().id;
 
 
