@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  
+    Chart,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -9,7 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import {Line } from 'react-chartjs-2';
-import Chart from "chart.js/auto";
+
 
 const myarray = Array.from(Array(10).keys())
 Chart.register(
@@ -22,7 +22,7 @@ Chart.register(
 );
 
 
-const MYChart= ( {title,myData} )=>{
+const CoinDetailsChart= ( {title,myData} )=>{
 
  
 
@@ -52,7 +52,7 @@ const MYChart= ( {title,myData} )=>{
   };
   
 
-// const  options: {
+// const  options2: {
 //     legend: {
 //         display: false
 //     },
@@ -69,12 +69,12 @@ const MYChart= ( {title,myData} )=>{
     labels: myData,
     datasets: [
       {
-        backgroundColor: "#11182755",
+        backgroundColor: "#ffffff50",
         borderColor: "#A1C9D7",
         data: myData,
-        borderWidth:1,
-        pointBorderWidth:1,pointRadius:1,
-       // fill:true
+        pointBorderWidth:1,pointRadius:0,
+        borderWidth:0,
+        fill:true
       },
     ],
   };
@@ -86,5 +86,7 @@ const MYChart= ( {title,myData} )=>{
 
 
 }
-  
-  export default MYChart
+
+  export default  CoinDetailsChart
+
+
