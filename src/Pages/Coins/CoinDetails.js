@@ -8,10 +8,9 @@ import {
   FaShare,
   FaTrophy,
   FaStar,
-
 } from "react-icons/fa";
-import './style.scss';
-
+import "./style.scss";
+import { DaysData } from "./COinData";
 import {} from "react-icons/";
 import { MdNotificationsNone } from "react-icons/md";
 import { Bars, Circles, TailSpin } from "react-loader-spinner";
@@ -20,6 +19,8 @@ import MYChart from "../../Components/Charts/Charts";
 import useFetch from "../../Context/UseFetch/Usefetch";
 import CoinDetailsChart from "./CoinDetailsChart";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import moment from "moment/moment";
+import LineChartWithLabel from "./LineChartWithLabel";
 // import { Data } from "./COinData";
 
 const CoinDetails = () => {
@@ -27,8 +28,11 @@ const CoinDetails = () => {
   const [checkNUll, setcheckNUll] = useState(NaN);
   const [coinDetails, setCoinDetails] = useState();
   const [newloading, setNewloading] = useState(true);
+  const [openTab, setOpenTab] = useState(0);
+  const [days, setdays] = useState(90);
 
   const id = useParams().id;
+
 
   const { Data, loading, error } = useFetch(`coins/${id}`, "get", "", "", {
     tickers: true,
@@ -38,20 +42,117 @@ const CoinDetails = () => {
     sparkline: true,
   });
 
-  const coinMarket =async ()=>{
-    const res = await InvokeAPI(`coins/${id}/market_chart`,'get','','',{vs_currency:"INR",days:1,interval:"day"})
-    setCoinDetails(res)
-    setNewloading(false)
-  }
+
+    const selectDays = (e)=>{
+      let data = e.target.innerHTML
+      data==='24H'&&setdays(1)
+      if (data==='7d'||data==='14d'||data==='30d'||data==='90d') {
+        data = data.replace('d', '');
+       // console.log(data);
+        setdays(data)
+      }
+      data==='max'&&setdays('max')
+    //  console.log(data);
+      console.log(days);
+    }
+  const coinMarket = async () => {
+    const res = await InvokeAPI(`coins/${id}/market_chart`, "get", "", "", {
+      vs_currency: currency,
+      days: days,
+      interval: "daily",
+    });
+    setCoinDetails(res);
+    setNewloading(false);
+  };
 
   let marketData;
   useEffect(() => {
-  //  marketData = Data?.market_data;
-    coinMarket()
-  }, [id]);
+    //  marketData = Data?.market_data;
+    coinMarket();
+  }, [id,days,currency]);
 
+  // coinDetails?.market_caps?.forEach(element => {
+  // element[0]= moment(element[0]).format("MM/DD/YYYY");
+  // console.log(element)})
 
-
+  const CoinTabs = () => {
+    return (
+     <div className=" col-12 p-3 m-2 rounded bg-light">
+      <div className=" d-flex justify-content-between align-items-center"> <ul className="nav nav-tabs rounded  d-flex justify-content-start align-items-center text-light">
+        <li class="nav-item">
+          <button onClick={()=>setOpenTab(0)} className={`nav-link m-2 ${openTab===0&&'active'}`} aria-current="page" >
+          Prices History
+          </button>
+        </li>
+        <li class="nav-item">
+        <button onClick={()=>setOpenTab(1)} className={`nav-link m-2 ${openTab===1&&'active'}`} aria-current="page" >
+        Market Caps
+          </button>
+        </li>
+        <li class="nav-item">
+        <button onClick={()=>setOpenTab(2)} className={`nav-link m-2 ${openTab===2&&'active'}`} aria-current="page" >
+        Total Volumes History
+          </button>
+        </li>
+       
+      </ul>
+      <div>
+        <ul class="nav d-flex justify-content-between align-items-center">
+          {DaysData?.map((item)=><li class="nav-item btn border  m-1" onClick={selectDays}>{item}</li>)}
+          
+         
+        </ul>
+        </div>
+      </div>
+      <div>
+      {openTab===1&& <div className="col-12">
+           
+           {loading ? (
+             <TailSpin width={""}></TailSpin>
+           ) : (
+             <LineChartWithLabel
+               label={coinDetails?.market_caps?.map((item) =>
+                 moment(item[0]).format("MM/DD/YYYY")
+               )} title={'Market Capitalization Data'} dataSetlabel={currency}
+               ChartData={coinDetails?.market_caps?.map((item) => item[1])}
+             ></LineChartWithLabel>
+           )}
+         </div>}
+      </div>
+      <div>
+      {openTab===0&& <div className="col-12">
+            
+            {loading ? (
+              <TailSpin width={""}></TailSpin>
+            ) : (
+              <LineChartWithLabel
+                label={coinDetails?.prices?.map((item) =>
+                  moment(item[0]).format("MM/DD/YYYY")
+                )} title={'Price History Data'} dataSetlabel={currency}
+                ChartData={coinDetails?.prices?.map((item) => item[1])}
+              ></LineChartWithLabel>
+            )}
+          </div>}
+      </div>
+      <div>
+      {openTab===2&&  <div className="col-12">
+        
+        {loading ? (
+          <TailSpin width={""}></TailSpin>
+        ) : (
+          <LineChartWithLabel
+            label={coinDetails?.total_volumes?.map((item) =>
+              moment(item[0]).format("MM/DD/YYYY")
+            )} title={'Total Volumes Data'} dataSetlabel={currency}
+            ChartData={coinDetails?.total_volumes?.map((item) => item[1])}
+          ></LineChartWithLabel>
+        )}
+      </div>}
+      </div>
+     
+     </div>
+    );
+  };
 
   const MarketDataContainer = () => {
     return (
@@ -340,9 +441,13 @@ const CoinDetails = () => {
           <div className="mt-1 align-items-center">
             <input
               type="range"
-              value={Data.market_data.high_24h.usd-Data.market_data.low_24h.usd}
+              value={
+                Data.market_data.high_24h.usd - Data.market_data.low_24h.usd
+              }
               class="form-range range-filed-data col-8"
-              max={1000} id="customRange" onChange={()=>{}}
+              max={1000}
+              id="customRange"
+              onChange={() => {}}
               min={0}
             />
             <div class=" d-flex col-8 justify-content-between align-items-center">
@@ -356,7 +461,16 @@ const CoinDetails = () => {
             </div>
           </div>
         </div>
-        <div className="col-4"> {loading ? <TailSpin width={''}></TailSpin> : <CoinDetailsChart myData={Data?.market_data.sparkline_7d.price} ></CoinDetailsChart>}</div>
+        <div className="col-4">
+          {" "}
+          {loading ? (
+            <TailSpin width={""}></TailSpin>
+          ) : (
+            <CoinDetailsChart
+              myData={Data?.market_data.sparkline_7d.price}
+            ></CoinDetailsChart>
+          )}
+        </div>
         <Details></Details>
       </div>
     );
@@ -384,24 +498,21 @@ const CoinDetails = () => {
     <article className="  rounded-4 mb-5 container bg-black">
       <div className="rounded-div mt-6 py-4">
         <React.Fragment>
-          {loading ? <TailSpin width={''}></TailSpin> : <InfoCard />}
+          {loading ? <TailSpin width={""}></TailSpin> : <InfoCard />}
         </React.Fragment>
-        <div className="col-12 d-flex">
-          {
-            coinDetails?.market_caps.map((item)=>{
-              console.log(item);
-            })
-          }
-          <div className="col-6"> {loading ? <TailSpin width={''}></TailSpin > : <CoinDetailsChart myData={Data?.market_data.sparkline_7d.price} ></CoinDetailsChart>}</div>
-          <div className="col-6"> {loading ? <TailSpin width={''}></TailSpin> : <CoinDetailsChart myData={Data?.market_data.sparkline_7d.price} ></CoinDetailsChart>}</div>
-        </div>
+        <CoinTabs/>
         <React.Fragment>
           {loading ? <TailSpin width={""}></TailSpin> : <MarketDataContainer />}{" "}
         </React.Fragment>
 
         <div className=" text-start">
-          {loading ? <TailSpin width={""}></TailSpin> : <Description></Description>}
+          {loading ? (
+            <TailSpin width={""}></TailSpin>
+          ) : (
+            <Description></Description>
+          )}
         </div>
+      
       </div>
       {Data === null && <NoCoinData></NoCoinData>}
     </article>

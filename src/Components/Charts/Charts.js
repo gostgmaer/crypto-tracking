@@ -69,11 +69,12 @@ const MYChart= ( {title,myData} )=>{
     labels: myData,
     datasets: [
       {
-      
         backgroundColor: "#11182755",
         borderColor: "#A1C9D7",
         data: myData,
-        fill:true
+        borderWidth:1,
+        pointBorderWidth:1,pointRadius:1,
+       // fill:true
       },
     ],
   };

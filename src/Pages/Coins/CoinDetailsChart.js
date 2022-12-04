@@ -69,9 +69,11 @@ const CoinDetailsChart= ( {title,myData} )=>{
     labels: myData,
     datasets: [
       {
-        backgroundColor: "#11182755",
+        backgroundColor: "#ffffff50",
         borderColor: "#A1C9D7",
         data: myData,
+        pointBorderWidth:1,pointRadius:0,
+        borderWidth:0,
         fill:true
       },
     ],

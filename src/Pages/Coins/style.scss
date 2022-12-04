@@ -12,3 +12,8 @@
     background-repeat: no-repeat;
 }
 
+.big-chart{
+    canvas{
+        width: 100% !important;
+    }
+}
