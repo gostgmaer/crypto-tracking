@@ -101,7 +101,7 @@ const Header = () => {
                
                 <FaUserAlt></FaUserAlt> Sign up
               </Link>
-              <Link className="btn m-1 d-flex  btn-light align-items-center" to={`login`}>
+              <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/`}>
                 <FaUser /> Login
               </Link>
             </div>
