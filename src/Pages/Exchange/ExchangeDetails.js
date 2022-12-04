@@ -1,13 +1,37 @@
 import { useTabPanel } from '@chakra-ui/react';
-import React from 'react'
 import { useParams } from 'react-router-dom';
 import useFetch from '../../Context/UseFetch/Usefetch';
+import React, { useEffect, useState } from "react";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaCopy,
+  FaDollarSign,
+  FaRupeeSign,
+  FaShare,
+  FaTrophy,
+  FaStar,
+} from "react-icons/fa";
+// import "./style.scss";
+// import { DaysData } from "./COinData";
+import {} from "react-icons/";
+import { MdNotificationsNone } from "react-icons/md";
+import { Bars, Circles, TailSpin } from "react-loader-spinner";
+import MYChart from "../../Components/Charts/Charts";
+// import CoinDetailsChart from "./CoinDetailsChart";
+import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import moment from "moment/moment";
 
 const ExchangeDetails = () => {
 
-
+  const [currency, setCurrency] = useState("USD");
+  const [checkNUll, setcheckNUll] = useState(NaN);
+  const [coinDetails, setCoinDetails] = useState();
+  const [newloading, setNewloading] = useState(true);
+  const [openTab, setOpenTab] = useState(0);
+  const [days, setdays] = useState(90);
   const id = useParams().id;
-
+const [exchangeDetails, setExchangeDetails] = useState();
 
 
 
@@ -22,8 +46,323 @@ const ExchangeDetails = () => {
     developer_data: true,
     sparkline: true,
   });
+
+  const exchangeMarket = async () => {
+    const res = await InvokeAPI(`exchanges/${id}/volume_chart`, "get", "", "", {
+     
+      days: days
+     
+    });
+    setExchangeDetails(res);
+    setNewloading(false);
+  };
+
+  let marketData;
+  useEffect(() => {
+    //  marketData = Data?.market_data;
+    exchangeMarket();
+  }, [id,days,currency]);
+
+
+
+
+  const MarketDataContainer = () => {
+    return (
+      <React.Fragment>
+        {" "}
+        <div className="container">
+          <div className="row">
+            <div className="col-6  text-end">
+              <div className="border-b align-items-center justify-content-end border-bottom m-2 p-2 text-white">
+                <h4 className="text-gray-500 mb-0 dark:text-gray-400 text-sm">
+                  24 Hours Trade Volumes
+                </h4>
+                <p className="font-semibold p-0 mb-0">
+                  {currency === "USD" ? (
+                    <React.Fragment>
+                      <FaDollarSign></FaDollarSign>{" "}
+                      {Data?.trade_volume_24h_btc.toFixed(2)}
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <FaRupeeSign></FaRupeeSign>{" "}
+                      {Data?.trade_volume_24h_btc.toFixed(2)}
+                    </React.Fragment>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="col-6 text-start">
+              <div className="border-b align-items-center justify-content-end border-bottom m-2 p-2 text-white">
+                <h4 className="text-gray-500 mb-0 dark:text-gray-400 text-sm">
+                  24 Hours Normalization Volume
+                </h4>
+                <p className="font-semibold mb-0">
+                  {" "}
+                  {currency === "USD" ? (
+                    <React.Fragment>
+                      <FaDollarSign></FaDollarSign>{" "}
+                      {Data?.trade_volume_24h_btc_normalized.toFixed(2)}
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <FaRupeeSign></FaRupeeSign>{" "}
+                      {Data?.trade_volume_24h_btc_normalized.toFixed(2)}
+                    </React.Fragment>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="col-6 text-end">
+              <div className="border-b align-items-center justify-content-end border-bottom m-2 p-2 text-white">
+                <h4 className="text-gray-500 mb-0 dark:text-gray-400 text-sm">
+                  Trust Score
+                </h4>
+                <p className="font-semibold mb-0">
+                  {currency === "USD" ? (
+                    <React.Fragment>
+                      <FaTrophy></FaTrophy>{" "}
+                      {Data?.trust_score}
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <FaTrophy></FaTrophy>{" "}
+                      {Data.trust_score}
+                    </React.Fragment>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="col-6 text-start">
+              <div className="border-b align-items-center justify-content-end border-bottom m-2 p-2 text-white">
+                <h4 className="text-gray-500 mb-0 dark:text-gray-400 text-sm">
+                Trust Score Rank
+                </h4>
+                <p className="font-semibold mb-0">
+                  {currency === "USD" ? (
+                    <React.Fragment>
+                      <FaDollarSign></FaDollarSign>{" "}
+                      {Data?.trust_score_rank}
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <FaRupeeSign></FaRupeeSign>{" "}
+                      {Data?.trust_score_rank}
+                    </React.Fragment>
+                  )}
+                </p>
+              </div>
+            </div>
+           
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  };
+  // const Description = () => {
+  //   return (
+  //     <React.Fragment>
+  //       {" "}
+  //       <h1 className="text-2xl font-semibold mt-8 mb-4">
+  //         About {Data.name} ({Data.symbol.toLocaleUpperCase()})
+  //       </h1>
+  //       <div
+  //         dangerouslySetInnerHTML={{ __html: Data.description.en }}
+  //         style={{ whiteSpace: "pre-wrap" }}
+  //         className="text-break text-light text-start"
+  //       ></div>
+  //     </React.Fragment>
+  //   );
+  // };
+
+  const Details = () => {
+    return (
+      <div className="my-4 col-3 text-white text-start ">
+        <h2 className="text-xl font-semibold">Info</h2>
+        <div className="my-1">
+          <div className="my-2">
+            <small className="text-gray-600 dark:text-gray-400 font-semibold">
+              Website
+            </small>
+            <div className="my-1">
+              <a
+                className="text-decoration-none rounded-2 bg-light link-dark px-3 py-1"
+                href={Data?.url}
+              >
+                Official site
+              </a>
+            </div>
+          </div>
+          <div>
+            <small className="text-gray-600 dark:text-gray-400 font-semibold">
+              Community
+            </small>
+            <div className="grid gap-1 grid-cols-2 my-1">
+              
+              <a
+                className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
+                href={`${Data?.facebook_url}`}
+              >
+                Facebook
+              </a>
+              <a
+                className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
+                href={`https://www.twitter.com/${Data?.twitter_handle}`}
+              >
+                Twitter
+              </a>
+              
+            </div>
+          </div>
+        
+          <div className=" my-1 ">
+            <div class=" d-flex align-items-center justify-content-start">
+              <span className=" me-2">Centralized: </span>
+              <span className=" btn text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
+                {Data?.centralized?'True':'False'}
+               
+              </span>
+            </div>
+          </div>
+          <div className=" my-1">
+            <div class=" d-flex align-items-center justify-content-start">
+              <span className=" me-2">Country: </span>
+              <span className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
+                {Data?.country}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const InfoCard = () => {
+    return (
+      <div className=" d-flex col-12 justify-content-between">
+        <div className="d-block my-4 col-5  text-white p-3 text-start">
+          <div className=" mt-1 d-flex align-items-center">
+            <img
+              className="w-8 mr-2 rounded-circle"
+              src={Data.image}
+              alt={Data.name}
+            />
+            <h2 className="font-bold text-xl">
+              {Data.name}
+            </h2>
+          </div>
+          <div className="mt-3 d-flex  justify-content-start align-items-center">
+            <h5 className="font-bold text-3xl">
+            Trading incentive: {Data?.has_trading_incentive?'True':'False'}
+            </h5>
+           
+          </div>
+          <div className=" mt-1 d-flex align-items-center">
+            <small>Established {Data.year_established}</small>
+          </div>
+          <div className="mt-1 d-flex align-items-center">
+            <button type="button" class="btn btn-light m-1">
+              <FaShare></FaShare>
+            </button>
+            <button type="button" class="btn btn-light m-1">
+              <MdNotificationsNone></MdNotificationsNone>
+            </button>
+            <button type="button" class="btn btn-light m-1">
+              <FaStar></FaStar>
+            </button>
+          </div>
+          {/* <div className="mt-1 align-items-center">
+            <input
+              type="range"
+              value={
+                Data.market_data.high_24h.usd - Data.market_data.low_24h.usd
+              }
+              class="form-range range-filed-data col-8"
+              max={1000}
+              id="customRange"
+              onChange={() => {}}
+              min={0}
+            />
+            <div class=" d-flex col-8 justify-content-between align-items-center">
+              <div class="">
+                <span class="no-wrap">${Data.market_data.low_24h.usd}</span>
+              </div>
+              <div class="">24H Range</div>
+              <div class="text-right">
+                <span class="no-wrap">${Data.market_data.high_24h.usd}</span>
+              </div>
+            </div>
+          </div> */}
+        </div>
+        <div className="col-2">
+        
+        </div>
+        <Details></Details>
+      </div>
+    );
+  };
+
+  const NoCoinData = () => {
+    return (
+      <div className="card text-center">
+        <div className="card-header">No Data Found</div>
+        <div className="card-body">
+          <h5 className="card-title">Special title treatment</h5>
+          <p className="card-text">
+            With supporting text below as a natural lead-in to additional
+            content.
+          </p>
+          <a className="btn btn-primary btn-sm " href="/" role="button">
+            Home
+          </a>
+        </div>
+      </div>
+    );
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
-    <div>ExchangeDetails</div>
+    <div>
+
+<article className="  rounded-4 mb-5 container bg-black">
+      <div className="rounded-div mt-6 py-4">
+        <React.Fragment>
+          {loading ? <TailSpin width={""}></TailSpin> : <InfoCard />}
+        </React.Fragment>
+        {/* <CoinTabs/> */}
+        <React.Fragment>
+          {loading ? <TailSpin width={""}></TailSpin> : <MarketDataContainer />}{" "}
+        </React.Fragment>
+
+        {/* <div className=" text-start">
+          {loading ? (
+            <TailSpin width={""}></TailSpin>
+          ) : (
+            <Description></Description>
+          )}
+        </div> */}
+      
+      </div>
+      {Data === null && <NoCoinData></NoCoinData>}
+    </article>
+
+
+
+    </div>
   )
 }
 

@@ -72,9 +72,9 @@ const MYChart= ( {title,myData} )=>{
         backgroundColor: "#11182755",
         borderColor: "#A1C9D7",
         data: myData,
-        borderWidth:1,
-        pointBorderWidth:1,pointRadius:1,
-       // fill:true
+        borderWidth:0,
+        pointBorderWidth:1,pointRadius:0,
+        fill:true
       },
     ],
   };

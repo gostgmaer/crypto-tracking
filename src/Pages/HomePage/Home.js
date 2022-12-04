@@ -44,7 +44,7 @@ const Home = () => {
       class="table table-striped
     table-hover	
     table-borderless
-    table-primary
+   
     align-middle"
     >
       <thead class="table-light">
@@ -81,12 +81,12 @@ const Home = () => {
                 {item.price_change_percentage_24h < 0 ? (
                   <div className=" text-danger">
                     <FaArrowDown></FaArrowDown>
-                    <span>{item.price_change_percentage_24h}</span>
+                    <span>{item.price_change_percentage_24h.toFixed(2)} %</span>
                   </div>
                 ) : (
                   <div className=" text-success">
                     <FaArrowUp></FaArrowUp>
-                    <span>{item.price_change_percentage_24h}</span>
+                    <span>{item.price_change_percentage_24h.toFixed(2)} %</span>
                   </div>
                 )}
               </td>
@@ -101,14 +101,14 @@ const Home = () => {
                   <div className=" text-danger">
                     <FaArrowDown></FaArrowDown>
                     <span>
-                      {item.market_cap_change_percentage_24h}
+                      {item.market_cap_change_percentage_24h.toFixed(2)} %
                     </span>
                   </div>
                 ) : (
                   <div className=" text-success">
                     <FaArrowUp></FaArrowUp>
                     <span>
-                      {item.market_cap_change_percentage_24h}
+                      {item.market_cap_change_percentage_24h.toFixed(2)} %
                     </span>
                   </div>
                 )}
