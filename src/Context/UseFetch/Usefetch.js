@@ -7,7 +7,7 @@ const useFetch = (endpoint, method, header,body, query ) => {
   const [error, setError] = useState("");
   useEffect(() => {
     apicall();
-  }, [endpoint,query]);
+  }, [endpoint]);
 
   const apicall = async () => {
     const res = await InvokeAPI(

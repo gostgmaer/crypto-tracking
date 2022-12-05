@@ -2,8 +2,8 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logo } from "../../Assets/StaticData/Data";
 import "./header.scss";
-
-import { FaUser, FaUserAlt, FaUserEdit } from "react-icons/fa";
+import { MdLogin, MdLogout } from "react-icons/md";
+import { FaLockOpen, FaUser, FaUserAlt, FaUserEdit } from "react-icons/fa";
 const Header = () => {
   const headerNavData = [
     {
@@ -94,16 +94,13 @@ const Header = () => {
             </ul>
             <div className="d-flex  text-light  align-items-center my-lg-0">
             
-              <Link
-                className="btn btn-warning d-flex align-items-center"
-                to={`signup`}
-              >
-               
-                <FaUserAlt></FaUserAlt> Sign up
-              </Link>
+            
               <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/`}>
-                <FaUser /> Login
+                <MdLogin></MdLogin> Login
               </Link>
+              <button className="btn m-1 d-flex  btn-light align-items-center">
+               <MdLogout></MdLogout> Logout
+              </button>
             </div>
           </div>
         </div>
