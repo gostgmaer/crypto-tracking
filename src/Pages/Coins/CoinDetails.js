@@ -495,7 +495,7 @@ const CoinDetails = () => {
 
   return (
     <article className="  rounded-4 mb-5 container bg-black">
-      <div className="rounded-div mt-6 py-4">
+      <div className="rounded mt-5 py-4">
         <React.Fragment>
           {loading ? <TailSpin width={""}></TailSpin> : <InfoCard />}
         </React.Fragment>
