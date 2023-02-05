@@ -95,7 +95,7 @@ const Header = () => {
             <div className="d-flex  text-light  align-items-center my-lg-0">
             
             
-              <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/`}>
+              <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/login`}>
                 <MdLogin></MdLogin> Login
               </Link>
               <button className="btn m-1 d-flex  btn-light align-items-center">

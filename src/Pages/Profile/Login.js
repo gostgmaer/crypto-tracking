@@ -72,7 +72,7 @@ const Login = () => {
               <FaGithub></FaGithub> Github
             </button>
           </div>
-          <Link to={`signup`}>Don't have Account? </Link>
+          <Link to={`/signup`}>Don't have Account? </Link>
           <p className="mt-5 mb-3 text-muted">© 2017–2021</p>
         </div>
       </main>
