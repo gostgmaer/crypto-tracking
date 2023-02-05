@@ -9,7 +9,7 @@ const Header = () => {
     {
       id: 1,
       text: "Home",
-      url: "/",
+      url: "/dashboard",
     },
     {
       id: 2,

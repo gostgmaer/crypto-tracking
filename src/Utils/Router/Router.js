@@ -45,8 +45,9 @@ const Router = () => {
           path="/exchanges/:id"
           element={<ExchangeDetails></ExchangeDetails>}></Route>
         <Route path="/profile" element={<Profile></Profile>}></Route>
-        <Route path="/" element={<Login></Login>}></Route>
+        <Route path="/" element={<Home></Home>}></Route>
         <Route path="/signup" element={<Registration></Registration>}></Route>
+        <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/wallet" element={<Wallet></Wallet>}></Route>
         <Route path="/about" element={<About></About>}></Route>
         <Route path="/contact" element={<Contact></Contact>}></Route>

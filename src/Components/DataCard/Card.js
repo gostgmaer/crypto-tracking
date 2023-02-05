@@ -4,24 +4,24 @@ import { Link } from 'react-router-dom'
 
 const Card = ({image,name,id,url,rank}) => {
   return (
-    <div  class="col-3 p-0 ">
-    <div class="card m-2  shadow pe-auto">
-      <div class="card-body text-center m-auto">
+    <div  className="col-4 p-0 ">
+    <div className="card m-2  shadow pe-auto">
+      <div className="card-body text-center m-auto">
         <img
           src={image}
-          className="m-auto  rounded-circle"
+          className="m-auto w-50 rounded-circle"
           alt={name}
         ></img>
-        <h4 class="card-title">{name}</h4>
+        <h4 className="card-title">{name}</h4>
        
-        <div class="card-body d-flex justify-content-between align-items-center">
-          <Link to={id} class="btn btn-warning">
+        <div className="card-body card-button-Container p-0 d-flex justify-content-between align-items-center">
+          <Link to={id} className="btn btn-warning">
             Get Details
           </Link>
           <a
             href={url}
             target={`_blank`}
-            class=" btn btn-light "
+            className=" btn btn-light "
           >
             Official Website
           </a>

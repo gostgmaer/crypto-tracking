@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import {  notifyerror } from "../Notifications/Notice";
+import { notifyerror } from "../Notifications/Notice";
 
 const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   const baseURL = process.env.REACT_APP_BASE_URL;
@@ -8,18 +8,17 @@ const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   const option = {
     method: type,
     url: baseURL + endpoint,
-    headers: { Authorization: `bearer ${token}`,accept: "application/json" },
+    headers: { Authorization: `bearer ${token}`, accept: "application/json" },
     params: queryParam,
     data: body,
   };
   let response;
   let error;
-  console.log(option);
   try {
     response = await axios.request(option);
   } catch (e) {
-    console.log(e);
-    notifyerror('Error',2000)
+    // console.log(e);
+    notifyerror(e.message, 2000);
     error = e.message;
     throw new Error(e.message);
   }
