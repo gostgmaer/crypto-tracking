@@ -22,6 +22,7 @@ import MYChart from "../../Components/Charts/Charts";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import moment from "moment/moment";
 import ExchangeCharts from "./ExchangesChart";
+import Sidebar from "../../Components/Sidebar/Sidebar";
 
 const ExchangeDetails = () => {
   const [currency, setCurrency] = useState("USD");
@@ -29,9 +30,11 @@ const ExchangeDetails = () => {
   const [coinDetails, setCoinDetails] = useState();
   const [newloading, setNewloading] = useState(true);
   const [openTab, setOpenTab] = useState(0);
-  const [days, setdays] = useState(365);
+  const [days, setdays] = useState(7);
   const id = useParams().id;
   const [exchangeDetails, setExchangeDetails] = useState();
+  const [chartError, setChartError] = useState(null);
+  const [exchangeError, setExchangeError] = useState(null);
 
   const DaysData = [
     "24H",
@@ -54,11 +57,21 @@ const ExchangeDetails = () => {
   });
 
   const exchangeMarket = async () => {
-    const res = await InvokeAPI(`exchanges/${id}/volume_chart`, "get", "", "", {
-      days: days,
-    });
-    setExchangeDetails(res);
-    setNewloading(false);
+    try {
+      setChartError(null);
+      const res = await InvokeAPI(
+        `exchanges/${id}/volume_chart`,
+        "get",
+        "",
+        "",
+        {
+          days: days,
+        }
+      );
+      setExchangeDetails(res);
+    } catch (e) {
+      setChartError(e.message);
+    }
   };
 
   let marketData;
@@ -85,7 +98,7 @@ const ExchangeDetails = () => {
     }
     data === "max" && setdays("2000");
     //  console.log(data);
-    console.log(days);
+    // console.log(days);
   };
 
   const MarketDataContainer = () => {
@@ -147,7 +160,7 @@ const ExchangeDetails = () => {
                     </React.Fragment>
                   ) : (
                     <React.Fragment>
-                      <FaTrophy></FaTrophy> {Data.trust_score}
+                      <FaTrophy></FaTrophy> {Data?.trust_score}
                     </React.Fragment>
                   )}
                 </p>
@@ -189,8 +202,7 @@ const ExchangeDetails = () => {
             <div className="my-1">
               <a
                 className="text-decoration-none rounded-2 bg-light link-dark px-3 py-1"
-                href={Data?.url}
-              >
+                href={Data?.url}>
                 Official site
               </a>
             </div>
@@ -202,21 +214,19 @@ const ExchangeDetails = () => {
             <div className="grid gap-1 grid-cols-2 my-1">
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`${Data?.facebook_url}`}
-              >
+                href={`${Data?.facebook_url}`}>
                 Facebook
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`https://www.twitter.com/${Data?.twitter_handle}`}
-              >
+                href={`https://www.twitter.com/${Data?.twitter_handle}`}>
                 Twitter
               </a>
             </div>
           </div>
 
           <div className=" my-1 ">
-            <div class=" d-flex align-items-center justify-content-start">
+            <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Centralized: </span>
               <span className=" btn text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
                 {Data?.centralized ? "True" : "False"}
@@ -224,7 +234,7 @@ const ExchangeDetails = () => {
             </div>
           </div>
           <div className=" my-1">
-            <div class=" d-flex align-items-center justify-content-start">
+            <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Country: </span>
               <span className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
                 {Data?.country}
@@ -243,10 +253,10 @@ const ExchangeDetails = () => {
           <div className=" mt-1 d-flex align-items-center">
             <img
               className="w-8 mr-2 rounded-circle"
-              src={Data.image}
-              alt={Data.name}
+              src={Data?.image}
+              alt={Data?.name}
             />
-            <h2 className="font-bold text-xl">{Data.name}</h2>
+            <h2 className="font-bold text-xl">{Data?.name}</h2>
           </div>
           <div className="mt-3 d-flex  justify-content-start align-items-center">
             <h5 className="font-bold text-3xl">
@@ -255,20 +265,19 @@ const ExchangeDetails = () => {
             </h5>
           </div>
           <div className=" mt-1 d-flex align-items-center">
-            <small>Established {Data.year_established}</small>
+            <small>Established {Data?.year_established}</small>
           </div>
           <div className="mt-1 d-flex align-items-center">
-            <button type="button" class="btn btn-light m-1">
+            <button type="button" className="btn btn-light m-1">
               <FaShare></FaShare>
             </button>
-            <button type="button" class="btn btn-light m-1">
+            <button type="button" className="btn btn-light m-1">
               <MdNotificationsNone></MdNotificationsNone>
             </button>
-            <button type="button" class="btn btn-light m-1">
+            <button type="button" className="btn btn-light m-1">
               <FaStar></FaStar>
             </button>
           </div>
-       
         </div>
         <div className="col-2"></div>
         <Details></Details>
@@ -302,9 +311,12 @@ const ExchangeDetails = () => {
             <span className=" h4">{Data?.name} Volume Chart </span>
           </div>
           <div>
-            <ul class="nav d-flex justify-content-between align-items-center">
+            <ul className="nav d-flex justify-content-between align-items-center">
               {DaysData?.map((item) => (
-                <li class="nav-item btn border  m-1" onClick={selectDays}>
+                <li
+                  key={item}
+                  className="nav-item btn border  m-1"
+                  onClick={selectDays}>
                   {item}
                 </li>
               ))}
@@ -314,18 +326,15 @@ const ExchangeDetails = () => {
 
         <div>
           <div className="col-12">
-            {loading ? (
-              <TailSpin width={""}></TailSpin>
-            ) : (
-              <ExchangeCharts
-                label={exchangeDetails?.map((item) =>
-                  moment(item[0]).format("MM/DD/YYYY")
-                )}
-                title={"Volumes Data Charts"}
-                dataSetlabel={currency}
-                ChartData={exchangeDetails?.map((item) => item[1])}
-              ></ExchangeCharts>
-            )}
+            <ExchangeCharts
+              label={exchangeDetails?.map((item) =>
+                moment(item[0]).format("MM/DD/YYYY")
+              )}
+              title={"Volumes Data Charts"}
+              dataSetlabel={currency}
+              ChartData={exchangeDetails?.map(
+                (item) => item[1]
+              )}></ExchangeCharts>
           </div>
         </div>
       </div>
@@ -333,24 +342,29 @@ const ExchangeDetails = () => {
   };
 
   return (
-    <div>
-      <article className="  rounded-4 mb-5 container bg-black">
-        <div className="rounded-div mt-6 py-4">
-          <React.Fragment>
-            {loading ? <TailSpin width={""}></TailSpin> : <InfoCard />}
-          </React.Fragment>
-          <ExchangesData></ExchangesData>
-          <React.Fragment>
-            {loading ? (
-              <TailSpin width={""}></TailSpin>
+    <div className="container-fluid">
+      <div className="row">
+        <Sidebar></Sidebar>
+
+        <div className="col-md-9 ml-sm-auto p-0 col-lg-10 ">
+          <article className=" p-0 rounded-4 container ">
+            {Data === null ? (
+              <NoCoinData></NoCoinData>
             ) : (
-              <MarketDataContainer />
-            )}{" "}
-          </React.Fragment>
+              <div className=" container bg-black py-1">
+                <div className="error">{error}</div>
+                <React.Fragment>{<InfoCard />}</React.Fragment>
+                <ExchangesData></ExchangesData>
+                <React.Fragment>
+                  <MarketDataContainer />
+                </React.Fragment>
+              </div>
+            )}
+          </article>
         </div>
-        {Data === null && <NoCoinData></NoCoinData>}
-      </article>
+      </div>
     </div>
+ 
   );
 };
 

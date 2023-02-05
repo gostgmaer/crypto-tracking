@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FaGoogle, FaReact,FaGithub } from "react-icons/fa";
+import { FaGoogle, FaReact, FaGithub } from "react-icons/fa";
 import { Circles } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  
-
-
-
-
-
-
-
-const loginHandler = ()=>{
-
-  const obj = {username:userName,pass:password,remember:remember}
-  console.log(obj);
-}
-
+  const loginHandler = () => {
+    const obj = { username: userName, pass: password, remember: remember };
+    // console.log(obj);
+  };
 
   return (
     <div className=" col-4 m-auto">
@@ -34,7 +23,8 @@ const loginHandler = ()=>{
           <div className="form-floating  mb-3 mt-3">
             <input
               type="email"
-              className="form-control" onChange={(e)=>setUserName(e.target.value)}
+              className="form-control"
+              onChange={(e) => setUserName(e.target.value)}
               id="floatingInput"
               placeholder="name@example.com"
             />
@@ -42,7 +32,8 @@ const loginHandler = ()=>{
           </div>
           <div className="form-floating  mb-3 mt-3">
             <input
-              type="password" onChange={(e)=>setPassword(e.target.value)}
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               id="floatingPassword"
               placeholder="Password"
@@ -52,19 +43,36 @@ const loginHandler = ()=>{
 
           <div className="checkbox mb-3">
             <label>
-              <input type="checkbox" value="remember-me" onChange={(e)=>setRemember(!remember)} /> Remember me
+              <input
+                type="checkbox"
+                value="remember-me"
+                onChange={(e) => setRemember(!remember)}
+              />{" "}
+              Remember me
             </label>
           </div>
-          <button className="w-100 btn btn-lg btn-primary m-2" onClick={loginHandler} type="submit">
+          <button
+            className="w-100 btn btn-lg btn-primary m-2"
+            onClick={loginHandler}
+            type="submit">
             Sign in
           </button>
-          <div className=" d-flex align-items-center justify-content-between"> <button className="col-6 btn btn-lg btn-warning m-2" onClick={loginHandler} type="submit">
-          <FaGoogle></FaGoogle> Google
-          </button>
-          <button className="col-6 btn btn-lg btn-dark m-2" onClick={loginHandler} type="submit">
-          <FaGithub></FaGithub> Github
-          </button></div>
-         <Link to={`signup`}>Don't have Account? </Link>
+          <div className=" d-flex align-items-center justify-content-between">
+            {" "}
+            <button
+              className="col-6 btn btn-lg btn-warning m-2"
+              onClick={loginHandler}
+              type="submit">
+              <FaGoogle></FaGoogle> Google
+            </button>
+            <button
+              className="col-6 btn btn-lg btn-dark m-2"
+              onClick={loginHandler}
+              type="submit">
+              <FaGithub></FaGithub> Github
+            </button>
+          </div>
+          <Link to={`/signup`}>Don't have Account? </Link>
           <p className="mt-5 mb-3 text-muted">© 2017–2021</p>
         </div>
       </main>

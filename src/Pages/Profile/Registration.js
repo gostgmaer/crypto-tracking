@@ -52,7 +52,7 @@ const Registration = () => {
   };
 
   const handleCreateAccount = () => {
-    console.log(body);
+    // console.log(body);
   };
 
   const FromData = () => {

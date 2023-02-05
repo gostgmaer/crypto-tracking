@@ -4,6 +4,7 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
     
     const [loader, setLoader] = useState(false);
+    const [appLoader, setAppLoader] = useState(false);
 
     const updateLoader=()=>{
         setLoader(!loader)
