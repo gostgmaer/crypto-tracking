@@ -299,7 +299,7 @@ const Home = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
+      <div className="row custom-skiliton">
         <Sidebar></Sidebar>
 
         <div className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
