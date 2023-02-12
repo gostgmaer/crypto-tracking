@@ -28,7 +28,7 @@ const Exchanges = () => {
   return (
     <Fragment>
       <div className="container-fluid">
-        <div className="row">
+        <div className="row custom-skiliton">
           <Sidebar></Sidebar>
           <div className="col-md-9 col-lg-10 d-flex flex-wrap ml-sm-auto">
         {Data?.map((item) => {

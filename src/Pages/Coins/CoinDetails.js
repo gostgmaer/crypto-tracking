@@ -345,7 +345,7 @@ const CoinDetails = () => {
             <small className="text-gray-600 dark:text-gray-400 font-semibold">
               Community
             </small>
-            <div className="grid gap-1 grid-cols-2 my-1">
+            <div className="grid gap-1 grid-cols-2 flex-wrap d-flex my-1">
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
                 href={Data?.links.subreddit_url}>
@@ -511,7 +511,7 @@ const CoinDetails = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
+      <div className="row custom-skiliton">
         <Sidebar></Sidebar>
 
         <div className="col-md-9 ml-sm-auto p-0 col-lg-10 ">

@@ -343,7 +343,7 @@ const ExchangeDetails = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
+      <div className="row custom-skiliton">
         <Sidebar></Sidebar>
 
         <div className="col-md-9 ml-sm-auto p-0 col-lg-10 ">
