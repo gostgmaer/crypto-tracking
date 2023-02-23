@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./style.scss";
 
 
@@ -33,15 +34,15 @@ const Notfound = () => {
   return (
     <div className="not-found">
       {" "}
-      <section class="error_section">
-        <p class="error_section_subtitle">Opps Page is not available !</p>
-        <h1 onMouseOver={titleChange} style={shadow} class="error_title">
+      <section className="error_section">
+        <p className="error_section_subtitle">Opps Page is not available !</p>
+        <h1 onMouseOver={titleChange} style={shadow} className="error_title">
           <p>404</p>
           404
         </h1>
-        <a href="/" class="btn">
+        <Link to="/" className="btn">
           Back to home
-        </a>
+        </Link>
       </section>
     </div>
   );

@@ -1,10 +1,9 @@
 import axios from "axios";
-import { useState } from "react";
 import { notifyerror } from "../Notifications/Notice";
 
-const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
-  const baseURL = process.env.REACT_APP_BASE_URL;
-  const token = process.env.REACT_APP_API_TOKEN;
+const AuthInvokeAPI = async (endpoint, type, body, queryParam) => {
+  const baseURL = 'https://ceebit-vwr.inadev.net/'
+  const token = "c2NoZWR1bGluZ3NlcnZlcjpwYXNzd29yZEAxMjM="
   const option = {
     method: type,
     url: baseURL + endpoint,
@@ -26,5 +25,5 @@ const InvokeAPI = async (endpoint, type, body, headerParams, queryParam) => {
   // if success return value
   return response?.data ? response?.data : error; // or set initial value
 };
-export default InvokeAPI;
+export default AuthInvokeAPI;
 

@@ -2,14 +2,25 @@ import React, { useEffect, useState } from "react";
 import { FaGoogle, FaReact, FaGithub } from "react-icons/fa";
 import { Circles } from "react-loader-spinner";
 import { Link } from "react-router-dom";
+import AuthInvokeAPI from "../../Utils/ApiCall/AuthInvoke";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const loginHandler = () => {
+
+  const loginHandler = async () => {
     const obj = { username: userName, pass: password, remember: remember };
-    // console.log(obj);
+    console.log(obj);
+    const bodyObj = {
+      searchKey: "mail",
+      searchVal: "varun.sengupta@inadev.com",
+      password: "VldScGFzc3dvcmQxIQ==",
+      grant_type: "password",
+      provider_type: "ldap-internal",
+    };
+    const res = await AuthInvokeAPI("userauth/authservice/session", "post",bodyObj,{});
+    console.log(res);
   };
 
   return (
@@ -73,7 +84,9 @@ const Login = () => {
             </button>
           </div>
           <Link to={`/signup`}>Don't have Account? </Link>
-          <p className="mt-5 mb-3 text-muted">© 2017–2021</p>
+          <p className="mt-5 mb-3 text-muted">
+            © 2017 – {new Date().getFullYear()}
+          </p>
         </div>
       </main>
     </div>
