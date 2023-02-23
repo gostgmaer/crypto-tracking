@@ -364,7 +364,6 @@ const ExchangeDetails = () => {
         </div>
       </div>
     </div>
- 
   );
 };
 

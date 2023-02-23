@@ -23,7 +23,7 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [country, setCountry] = useState("");
-  const [iscorrect, setIscorrect] = useState(false);
+  const [iscorrect, setIscorrect] = useState(null);
   const [pass, setPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [error, setError] = useState("No data Provided");
@@ -67,7 +67,7 @@ const Registration = () => {
             <h4 className="card-title mt-3 text-center">Create Account</h4>
             <p className="text-center">Get started with your free account</p>
             <p>
-              <button href="" className="btn btn-warning m-1">
+              <button  className="btn btn-warning m-1">
                 <FaGoogle></FaGoogle> Login via Google
               </button>
               <button className="btn btn-dark m-1">
@@ -124,7 +124,7 @@ const Registration = () => {
                 onChange={(e) => setCountry(e.target.value)}
                 required
               >
-                <option defaultValue>Select Country</option>
+                <option defaultValue='usa'>Select Country</option>
                 {staticCountry.map((country) => (
                   <option value={country.name} key={country.name}>
                     {country.name}
