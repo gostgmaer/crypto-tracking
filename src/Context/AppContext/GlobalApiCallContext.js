@@ -167,7 +167,7 @@ const AppRestApiProvider = ({ children }) => {
         currency,
         error,
         getCoinList,
-        getCoinDetails,
+        getCoinDetails,setLoading,
         getExchangeDetails,
         getExchangeList,
         getMarketChert,
