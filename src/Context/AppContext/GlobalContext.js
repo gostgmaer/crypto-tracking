@@ -1,17 +1,17 @@
-import React, { useContext,useState,useEffect } from "react";
-const AppContext = React.createContext();
+import React, { useContext, useState, useEffect } from "react";
+const AppContext = React.createContext(null);
 
 const AppProvider = ({ children }) => {
-    
-    const [loader, setLoader] = useState(false);
-    const [appLoader, setAppLoader] = useState(false);
 
-    const updateLoader=()=>{
-        setLoader(!loader)
-    }
+  const [loader, setLoader] = useState(false);
+
+
+  const updateLoader = () => {
+    setLoader(!loader)
+  }
 
   return <AppContext.Provider value={{
-    loader,updateLoader
+    loader, updateLoader
   }}>{children}</AppContext.Provider>;
 };
 

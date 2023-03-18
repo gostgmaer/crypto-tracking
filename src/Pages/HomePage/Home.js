@@ -4,19 +4,34 @@ import { MdClose } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
 import MYChart from "../../Components/Charts/Charts";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import Table from "../../Components/Table/Table";
+import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
+
 import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import { staticData } from "./Data";
 import "./Home.scss";
 const Home = () => {
+  const {
+    crypto,
+    cryptoDetails,
+    exchanges,
+    exchangeDetails,
+    chartData,
+    error,
+    getCoinList,
+    getCoinDetails,
+    getExchangeDetails,
+    getExchangeList,
+    getMarketChert,
+  } = useGlobalRestApiContext();
+
   const [currency, setCurrency] = useState("USD");
-  const [exchanges, setExchanges] = useState([]);
+  const [exchangesData, setExchangesData] = useState(null);
   const [newLoading, setNewLoading] = useState(true);
   const [count, setCount] = useState(1);
   const [openCurrency, setOpenCurrency] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [Data, setData] = useState();
+  const [Data, setData] = useState(null);
   const [exchangeError, setexchangeError] = useState(null);
   const [coinError, setCoinError] = useState(null);
 
@@ -38,10 +53,10 @@ const Home = () => {
     };
     try {
       const res = await InvokeAPI("exchanges", "get", "", "", param);
-      setExchanges(res);
+      setExchangesData(res);
     } catch (error) {
       setexchangeError(error.message);
-      setExchanges(null);
+      setExchangesData(null);
     }
     setNewLoading(false);
   };
@@ -67,6 +82,11 @@ const Home = () => {
   };
 
   useEffect(() => {
+    
+  
+    getExchangeList({})
+  }, []);
+  useEffect(() => {
     getExchangeData();
     getCoinData();
   }, [currency]);
@@ -80,8 +100,7 @@ const Home = () => {
     return (
       <div className="table-responsive text-start table-currency">
         <h3>Top 10 Cryptocurrency</h3>
-        <table
-          className="table table-hover table-borderless align-middle">
+        <table className="table table-hover table-borderless align-middle">
           <thead className="table-light">
             <tr>
               <th># Coin</th>
@@ -100,7 +119,8 @@ const Home = () => {
                   <td>
                     <Link
                       to={`/coins/${item.id}`}
-                      className=" d-flex nav-link justify-content-start align-items-center">
+                      className=" d-flex nav-link justify-content-start align-items-center"
+                    >
                       {item.market_cap_rank}
                       <img
                         className="m-2"
@@ -160,13 +180,12 @@ const Home = () => {
                 </tr>
               );
             })}
-          
           </tbody>
           <tfoot></tfoot>
         </table>
         {coinError && (
-              <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
-            )}
+          <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
+        )}
       </div>
     );
   };
@@ -174,8 +193,7 @@ const Home = () => {
     return (
       <div className="table-responsive text-start table-exchange">
         <h2>Top 10 Exchanges</h2>
-        <table
-          className="table table-hover table-borderless align-middle">
+        <table className="table table-hover table-borderless align-middle">
           <thead className="table-light">
             <tr>
               <th># Exchanges</th>
@@ -189,14 +207,15 @@ const Home = () => {
             <Fragment>
               {loading
                 ? ""
-                : exchanges?.length > 0 &&
-                  exchanges?.map((item) => {
+                : exchangesData?.length > 0 &&
+                  exchangesData?.map((item) => {
                     return (
                       <tr className="" key={item.id}>
                         <td>
                           <Link
                             to={`/exchanges/${item.id}`}
-                            className=" d-flex nav-link justify-content-start align-items-center">
+                            className=" d-flex nav-link justify-content-start align-items-center"
+                          >
                             {item.trust_score_rank}
                             <img
                               className="m-2"
@@ -248,13 +267,12 @@ const Home = () => {
                     );
                   })}
             </Fragment>
-          
           </tbody>
           <tfoot></tfoot>
         </table>
         {exchangeError && (
-              <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
-            )}
+          <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
+        )}
       </div>
     );
   };
@@ -314,7 +332,8 @@ const Home = () => {
                   }`}
                   type="button"
                   onClick={() => setOpenCurrency(!openCurrency)}
-                  aria-expanded={openCurrency ? "true" : "false"}>
+                  aria-expanded={openCurrency ? "true" : "false"}
+                >
                   {currency}
                 </button>
                 <ul
@@ -331,14 +350,16 @@ const Home = () => {
                           minWidth: 75,
                         }
                       : {}
-                  }>
+                  }
+                >
                   {staticData.newCurr.map((item) => {
                     return (
                       <li
                         key={item.id}
                         role="button"
                         onClick={chengeCurrency}
-                        className="dropdown-item">
+                        className="dropdown-item"
+                      >
                         {item.currency_code}
                       </li>
                     );
