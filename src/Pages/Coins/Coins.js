@@ -1,20 +1,41 @@
-import React, { Fragment, useState } from "react";
+import { Pagination, Stack, Typography } from "@mui/material";
+import React, { Fragment, useEffect, useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { Bars } from "react-loader-spinner";
 import Card from "../../Components/DataCard/Card";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
 import useFetch from "../../Context/UseFetch/Usefetch";
 
 const Coins = () => {
   const [count, setCount] = useState(1);
+  const [page, setPage] = React.useState(1);
+  const {
+    crypto,
+    cryptoDetails,
+    exchanges,
+    exchangeDetails,
+    chartData,
+    error,
+    getCoinList,
+    getCoinDetails,
+    getExchangeDetails,
+    getExchangeList,
+    getMarketChert,
+    inputValue,
+    setInputValue,
+    value,
+    setValue,
+  } = useGlobalRestApiContext();
 
-  const { Data, loading, error } = useFetch("coins/markets", "get", "", "", {
-    vs_currency: "usd",
-    order: "market_cap_desc",
-    per_page: 100,
-    page: count,
-    sparkline: false,
-  });
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    getCoinList({ perPage: 90, pageCount: page });
+  }, [page]);
 
   return (
     <Fragment>
@@ -22,24 +43,15 @@ const Coins = () => {
         <div className="row custom-skiliton">
           <Sidebar></Sidebar>
           <div className="col-md-9 col-lg-10 d-flex flex-wrap ml-sm-auto ">
-            {Data?(
-              <Fragment>
-                {Data?.map((item) => {
-                  return <Card key={item.id} {...item}></Card>;
-                })}
+            {crypto?.map((item) => {
+              return <Card key={item.id} {...item}></Card>;
+            })}
 
-                <div className="container d-flex justify-content-center align-items-center">
-                  <button className="m-3" onClick={() => setCount(count - 1)}>
-                    <FaArrowAltCircleLeft></FaArrowAltCircleLeft>
-                  </button>
-                  <button className="m-3" onClick={() => setCount(count + 1)}>
-                    <FaArrowAltCircleRight></FaArrowAltCircleRight>
-                  </button>
-                </div>
-              </Fragment>
-            ): (
-              <div className=" d-flex justify-content-center h3 align-items-center w-100 ">{error}</div>
-            )  }
+            <div className="container p-5 d-flex justify-content-center align-items-center">
+              <Stack spacing={2}>
+                <Pagination count={100} page={page} onChange={handleChange} />
+              </Stack>
+            </div>
           </div>
         </div>
       </div>

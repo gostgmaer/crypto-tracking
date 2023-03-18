@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FaGoogle, FaReact, FaGithub } from "react-icons/fa";
 import { Circles } from "react-loader-spinner";
 import { Link } from "react-router-dom";
+import { useGlobalAuth } from "../../Context/Auth/globalAuthContext";
 import AuthInvokeAPI from "../../Utils/ApiCall/AuthInvoke";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  
+  const {updateUser,user} = useGlobalAuth()
 
   const loginHandler = async () => {
     const obj = { username: userName, pass: password, remember: remember };
@@ -21,6 +24,7 @@ const Login = () => {
     };
     const res = await AuthInvokeAPI("userauth/authservice/session", "post",bodyObj,{});
     console.log(res);
+    updateUser()
   };
 
   return (

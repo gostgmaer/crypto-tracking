@@ -5,20 +5,22 @@ import { ToastContainer } from "react-toastify";
 import Header from "./Components/Header/Header";
 import { TailSpin } from "react-loader-spinner";
 import { useGlobalAppContext } from "./Context/AppContext/GlobalContext";
-
-
+import React from "react";
+import Circularprogress from "./Components/Loader/Circularprogress";
+import { useGlobalRestApiContext } from "./Context/AppContext/GlobalApiCallContext";
+import { useGlobalAuth } from "./Context/Auth/globalAuthContext";
+import UnProtectedRoute from "./Utils/Router/UnProtectedRoute";
 
 function App() {
+  const { loading } = useGlobalRestApiContext();
+  const {updateUser,user} = useGlobalAuth()
   return (
     <BrowserRouter>
       <div className="App">
-       
-        <Router></Router>
-      
+     { user?  <Router></Router>:<UnProtectedRoute/>}
       </div>
-      
+      {loading && <Circularprogress />}
       <ToastContainer></ToastContainer>
-     
     </BrowserRouter>
   );
 }
