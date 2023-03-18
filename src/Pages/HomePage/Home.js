@@ -1,3 +1,5 @@
+import { Autocomplete, TextField } from "@mui/material";
+import { currencies } from "currencies.json";
 import React, { Fragment, useEffect, useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
@@ -10,6 +12,7 @@ import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import { staticData } from "./Data";
 import "./Home.scss";
+const options = ['Option 1', 'Option 2'];
 const Home = () => {
   const {
     crypto,
@@ -22,7 +25,7 @@ const Home = () => {
     getCoinDetails,
     getExchangeDetails,
     getExchangeList,
-    getMarketChert,
+    getMarketChert,inputValue, setInputValue,  value, setValue,
   } = useGlobalRestApiContext();
 
   const [currency, setCurrency] = useState("USD");
@@ -34,7 +37,16 @@ const Home = () => {
   const [Data, setData] = useState(null);
   const [exchangeError, setexchangeError] = useState(null);
   const [coinError, setCoinError] = useState(null);
+ 
+  const newCurrency = currencies.forEach(element => {
+    element['label'] = element.name
 
+  });
+
+  useEffect(() => {
+    console.log(value, inputValue);
+
+  }, [value]);
   // const { Data, loading, error } = useFetch("coins/markets", "get", "", "", {
   // vs_currency: currency,
   // order: "market_cap_desc",
@@ -43,57 +55,57 @@ const Home = () => {
   // sparkline: true,
   // });
 
-  const getExchangeData = async () => {
-    setLoading(true);
-    setexchangeError(null);
-    const param = {
-      per_page: 10,
-      page: count,
-      vs_currency: currency,
-    };
-    try {
-      const res = await InvokeAPI("exchanges", "get", "", "", param);
-      setExchangesData(res);
-    } catch (error) {
-      setexchangeError(error.message);
-      setExchangesData(null);
-    }
-    setNewLoading(false);
-  };
+  // const getExchangeData = async () => {
+  //   setLoading(true);
+  //   setexchangeError(null);
+  //   const param = {
+  //     per_page: 10,
+  //     page: count,
+  //     vs_currency: currency,
+  //   };
+  //   try {
+  //     const res = await InvokeAPI("exchanges", "get", "", "", param);
+  //     setExchangesData(res);
+  //   } catch (error) {
+  //     setexchangeError(error.message);
+  //     setExchangesData(null);
+  //   }
+  //   setNewLoading(false);
+  // };
 
-  const getCoinData = async () => {
-    setLoading(true);
-    setCoinError(null);
-    const params = {
-      vs_currency: currency,
-      order: "market_cap_desc",
-      per_page: 10,
-      page: 1,
-      sparkline: true,
-    };
-    try {
-      const res = await InvokeAPI("coins/markets", "get", "", "", params);
-      setData(res);
-    } catch (error) {
-      setCoinError(error.message);
-      setData(null);
-    }
-    setLoading(false);
-  };
+  // const getCoinData = async () => {
+  //   setLoading(true);
+  //   setCoinError(null);
+  //   const params = {
+  //     vs_currency: currency,
+  //     order: "market_cap_desc",
+  //     per_page: 10,
+  //     page: 1,
+  //     sparkline: true,
+  //   };
+  //   try {
+  //     const res = await InvokeAPI("coins/markets", "get", "", "", params);
+  //     setData(res);
+  //   } catch (error) {
+  //     setCoinError(error.message);
+  //     setData(null);
+  //   }
+  //   setLoading(false);
+  // };
 
   useEffect(() => {
-    
-  
-    getExchangeList({})
-  }, []);
-  useEffect(() => {
-    getExchangeData();
-    getCoinData();
-  }, [currency]);
+    getExchangeList()
+    getCoinList({ currency: value?.code })
+  }, [value?.code]);
+  // useEffect(() => {
+  //   getExchangeData();
+  //   getCoinData();
+  // }, [currency]);
 
   const chengeCurrency = (e) => {
     setCurrency(e.target.innerText);
     setOpenCurrency(!openCurrency);
+    console.log(currencies);
   };
 
   const Crypto = () => {
@@ -113,7 +125,7 @@ const Home = () => {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {Data?.map((item) => {
+            {crypto?.map((item) => {
               return (
                 <tr className="" key={item.id}>
                   <td>
@@ -183,7 +195,7 @@ const Home = () => {
           </tbody>
           <tfoot></tfoot>
         </table>
-        {coinError && (
+        {crypto ? <></> : (
           <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
         )}
       </div>
@@ -205,72 +217,69 @@ const Home = () => {
           </thead>
           <tbody className="table-group-divider">
             <Fragment>
-              {loading
-                ? ""
-                : exchangesData?.length > 0 &&
-                  exchangesData?.map((item) => {
-                    return (
-                      <tr className="" key={item.id}>
-                        <td>
-                          <Link
-                            to={`/exchanges/${item.id}`}
-                            className=" d-flex nav-link justify-content-start align-items-center"
-                          >
-                            {item.trust_score_rank}
-                            <img
-                              className="m-2"
-                              height={30}
-                              src={item.image}
-                              alt={item.name}
-                            />{" "}
-                            <span className=" h5">{item.name}</span>{" "}
-                          </Link>
-                        </td>
-                        <td>{item.country}</td>
-                        <td>
-                          {item.trust_score < 8 ? (
-                            <div className=" text-danger">
-                              <FaArrowDown></FaArrowDown>
-                              <span>{item.trust_score}</span>
-                            </div>
-                          ) : (
-                            <div className=" text-success">
-                              <FaArrowUp></FaArrowUp>
-                              <span>{item.trust_score}</span>
-                            </div>
-                          )}
-                        </td>
-                        <td>{item.has_trading_incentive ? "True" : "False"}</td>
+              {exchanges?.map((item) => {
+                return (
+                  <tr className="" key={item.id}>
+                    <td>
+                      <Link
+                        to={`/exchanges/${item.id}`}
+                        className=" d-flex nav-link justify-content-start align-items-center"
+                      >
+                        {item.trust_score_rank}
+                        <img
+                          className="m-2"
+                          height={30}
+                          src={item.image}
+                          alt={item.name}
+                        />{" "}
+                        <span className=" h5">{item.name}</span>{" "}
+                      </Link>
+                    </td>
+                    <td>{item.country}</td>
+                    <td>
+                      {item.trust_score < 8 ? (
+                        <div className=" text-danger">
+                          <FaArrowDown></FaArrowDown>
+                          <span>{item.trust_score}</span>
+                        </div>
+                      ) : (
+                        <div className=" text-success">
+                          <FaArrowUp></FaArrowUp>
+                          <span>{item.trust_score}</span>
+                        </div>
+                      )}
+                    </td>
+                    <td>{item.has_trading_incentive ? "True" : "False"}</td>
 
-                        <td>
-                          {item.trade_volume_24h_btc_normalized < 0 ? (
-                            <div className=" text-danger">
-                              <FaArrowDown></FaArrowDown>
-                              <span>
-                                {item.trade_volume_24h_btc_normalized.toFixed(
-                                  2
-                                )}
-                              </span>
-                            </div>
-                          ) : (
-                            <div className=" text-success">
-                              <FaArrowUp></FaArrowUp>
-                              <span>
-                                {item.trade_volume_24h_btc_normalized.toFixed(
-                                  2
-                                )}
-                              </span>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                    <td>
+                      {item.trade_volume_24h_btc_normalized < 0 ? (
+                        <div className=" text-danger">
+                          <FaArrowDown></FaArrowDown>
+                          <span>
+                            {item.trade_volume_24h_btc_normalized.toFixed(
+                              2
+                            )}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className=" text-success">
+                          <FaArrowUp></FaArrowUp>
+                          <span>
+                            {item.trade_volume_24h_btc_normalized.toFixed(
+                              2
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </Fragment>
           </tbody>
           <tfoot></tfoot>
         </table>
-        {exchangeError && (
+        {exchanges ? <></> : (
           <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
         )}
       </div>
@@ -325,11 +334,10 @@ const Home = () => {
             <h1 className="h2">Dashboard</h1>
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2"></div>
-              <div className="dropdown ">
+              {/* <div className="dropdown ">
                 <button
-                  className={`btn btn-light dropdown-toggle ${
-                    openCurrency ? "show" : ""
-                  }`}
+                  className={`btn btn-light dropdown-toggle ${openCurrency ? "show" : ""
+                    }`}
                   type="button"
                   onClick={() => setOpenCurrency(!openCurrency)}
                   aria-expanded={openCurrency ? "true" : "false"}
@@ -337,18 +345,17 @@ const Home = () => {
                   {currency}
                 </button>
                 <ul
-                  className={`dropdown-menu dropdown-menu-right ${
-                    openCurrency ? "show" : ""
-                  }`}
+                  className={`dropdown-menu dropdown-menu-right ${openCurrency ? "show" : ""
+                    }`}
                   style={
                     openCurrency
                       ? {
-                          position: "absolute",
-                          inset: `0px auto auto 0px`,
-                          margin: `0`,
-                          transform: ` translate(0px, 40px)`,
-                          minWidth: 75,
-                        }
+                        position: "absolute",
+                        inset: `0px auto auto 0px`,
+                        margin: `0`,
+                        transform: ` translate(0px, 40px)`,
+                        minWidth: 75,
+                      }
                       : {}
                   }
                 >
@@ -365,7 +372,21 @@ const Home = () => {
                     );
                   })}
                 </ul>
-              </div>
+              </div> */}
+              <Autocomplete
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                id="controllable-states-demo"
+                options={currencies}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Controllable" />}
+              />
             </div>
           </div>
 

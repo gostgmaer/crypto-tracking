@@ -12,6 +12,17 @@ const AppRestApiProvider = ({ children }) => {
   const [cryptoDetails, setCryptoDetails] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
+  const [value, setValue] = React.useState({
+    "name": "US Dollar",
+    "symbol": "$",
+    "symbolNative": "$",
+    "decimalDigits": 2,
+    "rounding": 0,
+    "code": "USD",
+    "namePlural": "US dollars",
+    "label": "US Dollar"
+  });
+  const [inputValue, setInputValue] = React.useState('US Dollar');
 
   const updateLoader = () => {
     setLoading(!loading)
@@ -54,13 +65,15 @@ const AppRestApiProvider = ({ children }) => {
   };
 
   const getCoinList = async (query) => {
+    console.log(query);
     setLoading(true);
     setError(null);
     const param = {
       per_page: query?.perPage ? query.perPage : 10,
-      vs_currency: query?.currency ? query.currency : 'usd',
+      vs_currency: value?.code?value.code:'USD',
       order: query?.order ? query.order : 'market_cap_desc',
       category: query?.category ? query.category : null,
+      sparkline:query?.sparkline ? query.sparkline : true,
       ids: query?.ids ? query.ids : null,
       page: query?.pageCount ? query.pageCount : 1,
       price_change_percentage: query?.time ? query.time : '14d'
@@ -70,6 +83,7 @@ const AppRestApiProvider = ({ children }) => {
       setCrypto(res);
     } catch (error) {
       setError(error.message);
+      console.log(error.message);
       setCrypto(null);
     }
     setLoading(false);
@@ -95,10 +109,10 @@ const AppRestApiProvider = ({ children }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getExchangeList({})
+  // useEffect(() => {
+  //   getExchangeList({})
 
-  }, []);
+  // }, []);
 
 
   const getMarketChert = async (query, id, type) => {
@@ -121,14 +135,14 @@ const AppRestApiProvider = ({ children }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getExchangeList({})
+  // useEffect(() => {
+  //   getExchangeList({})
 
-  }, []);
+  // }, []);
 
 
   return <AppRestApiContext.Provider value={{
-    loading, crypto, cryptoDetails, exchanges, exchangeDetails, chartData, currency, error, getCoinList, getCoinDetails, getExchangeDetails, getExchangeList, getMarketChert
+  inputValue, setInputValue,  value, setValue,loading, crypto, cryptoDetails, exchanges, exchangeDetails, chartData, currency, error, getCoinList, getCoinDetails, getExchangeDetails, getExchangeList, getMarketChert
   }}>{children}</AppRestApiContext.Provider>;
 };
 
