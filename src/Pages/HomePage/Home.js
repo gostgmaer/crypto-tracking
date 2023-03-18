@@ -7,9 +7,10 @@ import { Link, NavLink } from "react-router-dom";
 import MYChart from "../../Components/Charts/Charts";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
-
+import getSymbolFromCurrency from 'currency-symbol-map'
 import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import currencyToSymbolMap from 'currency-symbol-map/map'
 import { staticData } from "./Data";
 import "./Home.scss";
 const options = ['Option 1', 'Option 2'];
@@ -25,7 +26,7 @@ const Home = () => {
     getCoinDetails,
     getExchangeDetails,
     getExchangeList,
-    getMarketChert,inputValue, setInputValue,  value, setValue,
+    getMarketChert, inputValue, setInputValue, value, setValue,
   } = useGlobalRestApiContext();
 
   const [currency, setCurrency] = useState("USD");
@@ -37,76 +38,24 @@ const Home = () => {
   const [Data, setData] = useState(null);
   const [exchangeError, setexchangeError] = useState(null);
   const [coinError, setCoinError] = useState(null);
- 
+
   const newCurrency = currencies.forEach(element => {
     element['label'] = element.name
 
   });
 
-  useEffect(() => {
-    console.log(value, inputValue);
+  // const newItem = Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)
+  // console.log(newItem);
 
-  }, [value]);
-  // const { Data, loading, error } = useFetch("coins/markets", "get", "", "", {
-  // vs_currency: currency,
-  // order: "market_cap_desc",
-  // per_page: 10,
-  // page: 1,
-  // sparkline: true,
-  // });
-
-  // const getExchangeData = async () => {
-  //   setLoading(true);
-  //   setexchangeError(null);
-  //   const param = {
-  //     per_page: 10,
-  //     page: count,
-  //     vs_currency: currency,
-  //   };
-  //   try {
-  //     const res = await InvokeAPI("exchanges", "get", "", "", param);
-  //     setExchangesData(res);
-  //   } catch (error) {
-  //     setexchangeError(error.message);
-  //     setExchangesData(null);
-  //   }
-  //   setNewLoading(false);
-  // };
-
-  // const getCoinData = async () => {
-  //   setLoading(true);
-  //   setCoinError(null);
-  //   const params = {
-  //     vs_currency: currency,
-  //     order: "market_cap_desc",
-  //     per_page: 10,
-  //     page: 1,
-  //     sparkline: true,
-  //   };
-  //   try {
-  //     const res = await InvokeAPI("coins/markets", "get", "", "", params);
-  //     setData(res);
-  //   } catch (error) {
-  //     setCoinError(error.message);
-  //     setData(null);
-  //   }
-  //   setLoading(false);
-  // };
 
   useEffect(() => {
     getExchangeList()
-    getCoinList({ currency: value?.code })
-  }, [value?.code]);
-  // useEffect(() => {
-  //   getExchangeData();
-  //   getCoinData();
-  // }, [currency]);
+    getCoinList()
+    console.log(currencyToSymbolMap);
 
-  const chengeCurrency = (e) => {
-    setCurrency(e.target.innerText);
-    setOpenCurrency(!openCurrency);
-    console.log(currencies);
-  };
+  }, [value?.code]);
+
+
 
   const Crypto = () => {
     return (
@@ -144,7 +93,7 @@ const Home = () => {
                     </Link>
                   </td>
                   <td>
-                    {currency}-{item.current_price}
+                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.current_price}
                   </td>
                   <td>
                     {item.price_change_percentage_24h < 0 ? (
@@ -164,10 +113,10 @@ const Home = () => {
                     )}
                   </td>
                   <td>
-                    {currency}-{item.total_volume}
+                    {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.total_volume}
                   </td>
                   <td>
-                    {currency}-{item.market_cap}
+                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.market_cap}
                   </td>
                   <td>
                     {item.market_cap_change_percentage_24h < 0 ? (
@@ -211,8 +160,8 @@ const Home = () => {
               <th># Exchanges</th>
               <th>Country</th>
               <th>Trust Score</th>
-              <th>24h Volume</th>
-              <th>Market cap</th>
+              <th>Trade Incentive</th>
+              <th>Trade Volume(24h)</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">
@@ -285,44 +234,7 @@ const Home = () => {
       </div>
     );
   };
-  // const Sidebarnav = () => {
-  //   return (
-  //     <React.Fragment>
-  //       <nav
-  //         id="sidebarMenu"
-  //         className="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-  //         <div className=" sticky-top pt-5 text-start">
-  //           <ul className="nav flex-column text-start">
-  //             {staticData.sidebarNavData.map((item, index) => {
-  //               return (
-  //                 <li className="nav-item" key={index}>
-  //                   <NavLink className=" nav-link text-light " to={item.url}>
-  //                     {item.text}
-  //                   </NavLink>
-  //                 </li>
-  //               );
-  //             })}
-  //           </ul>
 
-  //           <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-  //             <span>Saved reports</span>
-  //           </h6>
-  //           <ul className="nav flex-column mb-2">
-  //             {staticData.sidebarReportsData.map((item, index) => {
-  //               return (
-  //                 <li className="nav-item" key={index}>
-  //                   <Link className="nav-link text-light" to={item.url}>
-  //                     {item.text}
-  //                   </Link>
-  //                 </li>
-  //               );
-  //             })}
-  //           </ul>
-  //         </div>
-  //       </nav>
-  //     </React.Fragment>
-  //   );
-  // };
 
   return (
     <div className="container-fluid">
@@ -385,7 +297,7 @@ const Home = () => {
                 id="controllable-states-demo"
                 options={currencies}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Controllable" />}
+                renderInput={(params) => <TextField {...params} label="Currencies" />}
               />
             </div>
           </div>

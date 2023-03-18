@@ -13,20 +13,20 @@ const AppRestApiProvider = ({ children }) => {
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
   const [value, setValue] = React.useState({
-    "name": "US Dollar",
-    "symbol": "$",
-    "symbolNative": "$",
-    "decimalDigits": 2,
-    "rounding": 0,
-    "code": "USD",
-    "namePlural": "US dollars",
-    "label": "US Dollar"
+    name: "US Dollar",
+    symbol: "$",
+    symbolNative: "$",
+    decimalDigits: 2,
+    rounding: 0,
+    code: "USD",
+    namePlural: "US dollars",
+    label: "US Dollar",
   });
-  const [inputValue, setInputValue] = React.useState('US Dollar');
+  const [inputValue, setInputValue] = React.useState("US Dollar");
 
   const updateLoader = () => {
-    setLoading(!loading)
-  }
+    setLoading(!loading);
+  };
   const getExchangeList = async (query) => {
     setLoading(true);
     setError(null);
@@ -39,7 +39,6 @@ const AppRestApiProvider = ({ children }) => {
       setExchanges(res);
     } catch (error) {
       setError(error.message);
-      setExchanges(null);
     }
     setLoading(false);
   };
@@ -55,11 +54,16 @@ const AppRestApiProvider = ({ children }) => {
       sparkline: true,
     };
     try {
-      const res = await InvokeExternalAPI(`exchanges/${id}`, "get", "", {}, param);
+      const res = await InvokeExternalAPI(
+        `exchanges/${id}`,
+        "get",
+        "",
+        {},
+        param
+      );
       setExchangeDetails(res);
     } catch (error) {
       setError(error.message);
-      setExchangeDetails(null);
     }
     setLoading(false);
   };
@@ -70,21 +74,26 @@ const AppRestApiProvider = ({ children }) => {
     setError(null);
     const param = {
       per_page: query?.perPage ? query.perPage : 10,
-      vs_currency: value?.code?value.code:'USD',
-      order: query?.order ? query.order : 'market_cap_desc',
+      vs_currency: value?.code ? value.code : "USD",
+      order: query?.order ? query.order : "market_cap_desc",
       category: query?.category ? query.category : null,
-      sparkline:query?.sparkline ? query.sparkline : true,
+      sparkline: query?.sparkline ? query.sparkline : true,
       ids: query?.ids ? query.ids : null,
       page: query?.pageCount ? query.pageCount : 1,
-      price_change_percentage: query?.time ? query.time : '14d'
+      price_change_percentage: query?.time ? query.time : "14d",
     };
     try {
-      const res = await InvokeExternalAPI("coins/markets", "get", "", {}, param);
+      const res = await InvokeExternalAPI(
+        "coins/markets",
+        "get",
+        "",
+        {},
+        param
+      );
       setCrypto(res);
     } catch (error) {
       setError(error.message);
       console.log(error.message);
-      setCrypto(null);
     }
     setLoading(false);
   };
@@ -104,7 +113,6 @@ const AppRestApiProvider = ({ children }) => {
       setCryptoDetails(res);
     } catch (error) {
       setError(error.message);
-      setCryptoDetails(null);
     }
     setLoading(false);
   };
@@ -113,24 +121,27 @@ const AppRestApiProvider = ({ children }) => {
   //   getExchangeList({})
 
   // }, []);
-
 
   const getMarketChert = async (query, id, type) => {
     setLoading(true);
     setError(null);
     const param = {
-
-      vs_currency: query?.currency ? query.currency : 'usd',
-      interval: query?.interval ? query.interval : null,
-      days: query?.time ? query.time : '14d'
+      vs_currency: value?.code ? value.code  : "usd",
+      interval: query?.interval ? query.interval : 'daily',
+      days: query?.time ? query.time : "14d",
     };
-    cleanQueryparam(param)
+    cleanQueryparam(param);
     try {
-      const res = await InvokeExternalAPI(`${type}/${id}/market_chart`, "get", "", {}, param);
+      const res = await InvokeExternalAPI(
+        `${type}/${id}/market_chart`,
+        "get",
+        "",
+        {},
+        param
+      );
       setChartData(res);
     } catch (error) {
       setError(error.message);
-      setChartData(null);
     }
     setLoading(false);
   };
@@ -140,10 +151,31 @@ const AppRestApiProvider = ({ children }) => {
 
   // }, []);
 
-
-  return <AppRestApiContext.Provider value={{
-  inputValue, setInputValue,  value, setValue,loading, crypto, cryptoDetails, exchanges, exchangeDetails, chartData, currency, error, getCoinList, getCoinDetails, getExchangeDetails, getExchangeList, getMarketChert
-  }}>{children}</AppRestApiContext.Provider>;
+  return (
+    <AppRestApiContext.Provider
+      value={{
+        inputValue,
+        setInputValue,
+        value,
+        setValue,
+        loading,
+        crypto,
+        cryptoDetails,
+        exchanges,
+        exchangeDetails,
+        chartData,
+        currency,
+        error,
+        getCoinList,
+        getCoinDetails,
+        getExchangeDetails,
+        getExchangeList,
+        getMarketChert,
+      }}
+    >
+      {children}
+    </AppRestApiContext.Provider>
+  );
 };
 
 export const useGlobalRestApiContext = () => {
