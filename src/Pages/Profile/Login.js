@@ -10,22 +10,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   
-  const {updateUser,user} = useGlobalAuth()
+  const {updateUser,user,loginHandler} = useGlobalAuth()
 
-  const loginHandler = async () => {
-    const obj = { username: userName, pass: password, remember: remember };
-    console.log(obj);
-    const bodyObj = {
-      searchKey: "mail",
-      searchVal: "varun.sengupta@inadev.com",
-      password: "VldScGFzc3dvcmQxIQ==",
-      grant_type: "password",
-      provider_type: "ldap-internal",
-    };
-    const res = await AuthInvokeAPI("userauth/authservice/session", "post",bodyObj,{});
-    console.log(res);
-    updateUser()
-  };
+ 
 
   return (
     <div className=" col-4 m-auto">
