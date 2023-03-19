@@ -28,6 +28,10 @@ const CoinDetailsChart= ( {title,myData} )=>{
 
  const options = {
     responsive: true,
+    title: {
+      display: false,
+      text: title,
+    },
     plugins: {
       legend: {
        display:false

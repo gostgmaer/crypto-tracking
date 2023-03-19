@@ -1,6 +1,6 @@
 import { useTabPanel } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import useFetch from "../../Context/UseFetch/Usefetch";
+import useFetch from "../../../Context/UseFetch/Usefetch";
 import React, { useEffect, useState } from "react";
 import {
   FaArrowDown,
@@ -17,24 +17,36 @@ import {
 import {} from "react-icons/";
 import { MdNotificationsNone } from "react-icons/md";
 import { Bars, Circles, TailSpin } from "react-loader-spinner";
-import MYChart from "../../Components/Charts/Charts";
+import MYChart from "../../../Components/Charts/Charts";
 // import CoinDetailsChart from "./CoinDetailsChart";
-import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import InvokeAPI from "../../../Utils/ApiCall/InvokeAPI";
 import moment from "moment/moment";
-import ExchangeCharts from "./ExchangesChart";
-import Sidebar from "../../Components/Sidebar/Sidebar";
-
+import ExchangeCharts from "../ExchangesChart";
+import Sidebar from "../../../Components/Sidebar/Sidebar";
+import { useGlobalRestApiContext } from "../../../Context/AppContext/GlobalApiCallContext";
+import currencyToSymbolMap from "currency-symbol-map/map";
+import Nodata from "../../../Components/NodataComponent/Nodata";
 const ExchangeDetails = () => {
-  const [currency, setCurrency] = useState("USD");
-  const [checkNUll, setcheckNUll] = useState(NaN);
-  const [coinDetails, setCoinDetails] = useState();
-  const [newloading, setNewloading] = useState(true);
-  const [openTab, setOpenTab] = useState(0);
-  const [days, setdays] = useState(7);
+  const {
+    crypto,
+    cryptoDetails,
+    exchanges,
+    exchangeDetails,
+    chartData,
+    error,
+    getCoinList,
+    getCoinDetails,
+    getExchangeDetails,
+    getExchangeList,
+    getMarketChert,
+    inputValue,
+    setInputValue,
+    value,
+    setValue,
+  } = useGlobalRestApiContext();
+
+  const [days, setdays] = useState("7");
   const id = useParams().id;
-  const [exchangeDetails, setExchangeDetails] = useState();
-  const [chartError, setChartError] = useState(null);
-  const [exchangeError, setExchangeError] = useState(null);
 
   const DaysData = [
     "24H",
@@ -47,42 +59,21 @@ const ExchangeDetails = () => {
     "1000d",
     "max",
   ];
+  const currency = Object.entries(currencyToSymbolMap).find(
+    (item) => item["0"] === value.code
+  );
 
-  const { Data, loading, error } = useFetch(`exchanges/${id}`, "get", "", "", {
-    tickers: true,
-    market_data: true,
-    community_data: true,
-    developer_data: true,
-    sparkline: true,
-  });
-
-  const exchangeMarket = async () => {
-    try {
-      setChartError(null);
-      const res = await InvokeAPI(
-        `exchanges/${id}/volume_chart`,
-        "get",
-        "",
-        "",
-        {
-          days: days,
-        }
-      );
-      setExchangeDetails(res);
-    } catch (e) {
-      setChartError(e.message);
-    }
-  };
-
-  let marketData;
   useEffect(() => {
-    //  marketData = Data?.market_data;
-    exchangeMarket();
-  }, [id, days, currency]);
+    getExchangeDetails(id);
+  }, [id]);
+
+  useEffect(() => {
+    getMarketChert({ time: days }, id, "exchanges", "volume_chart");
+  }, [days, id]);
 
   const selectDays = (e) => {
     let data = e.target.innerHTML;
-    data === "24H" && setdays(1);
+    data === "24H" && setdays("1");
     if (
       data === "7d" ||
       data === "14d" ||
@@ -113,17 +104,7 @@ const ExchangeDetails = () => {
                   24 Hours Trade Volumes
                 </h4>
                 <p className="font-semibold p-0 mb-0">
-                  {currency === "USD" ? (
-                    <React.Fragment>
-                      <FaDollarSign></FaDollarSign>{" "}
-                      {Data?.trade_volume_24h_btc.toFixed(2)}
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <FaRupeeSign></FaRupeeSign>{" "}
-                      {Data?.trade_volume_24h_btc.toFixed(2)}
-                    </React.Fragment>
-                  )}
+                {exchangeDetails?.trade_volume_24h_btc.toFixed(2)}
                 </p>
               </div>
             </div>
@@ -133,18 +114,9 @@ const ExchangeDetails = () => {
                   24 Hours Normalization Volume
                 </h4>
                 <p className="font-semibold mb-0">
-                  {" "}
-                  {currency === "USD" ? (
-                    <React.Fragment>
-                      <FaDollarSign></FaDollarSign>{" "}
-                      {Data?.trade_volume_24h_btc_normalized.toFixed(2)}
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <FaRupeeSign></FaRupeeSign>{" "}
-                      {Data?.trade_volume_24h_btc_normalized.toFixed(2)}
-                    </React.Fragment>
-                  )}
+                {exchangeDetails?.trade_volume_24h_btc_normalized.toFixed(
+                        2
+                      )}
                 </p>
               </div>
             </div>
@@ -154,15 +126,7 @@ const ExchangeDetails = () => {
                   Trust Score
                 </h4>
                 <p className="font-semibold mb-0">
-                  {currency === "USD" ? (
-                    <React.Fragment>
-                      <FaTrophy></FaTrophy> {Data?.trust_score}
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <FaTrophy></FaTrophy> {Data?.trust_score}
-                    </React.Fragment>
-                  )}
+                {exchangeDetails?.trust_score}
                 </p>
               </div>
             </div>
@@ -172,15 +136,7 @@ const ExchangeDetails = () => {
                   Trust Score Rank
                 </h4>
                 <p className="font-semibold mb-0">
-                  {currency === "USD" ? (
-                    <React.Fragment>
-                      <FaDollarSign></FaDollarSign> {Data?.trust_score_rank}
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <FaRupeeSign></FaRupeeSign> {Data?.trust_score_rank}
-                    </React.Fragment>
-                  )}
+                {exchangeDetails?.trust_score_rank}
                 </p>
               </div>
             </div>
@@ -202,7 +158,8 @@ const ExchangeDetails = () => {
             <div className="my-1">
               <a
                 className="text-decoration-none rounded-2 bg-light link-dark px-3 py-1"
-                href={Data?.url}>
+                href={exchangeDetails?.url}
+              >
                 Official site
               </a>
             </div>
@@ -214,12 +171,14 @@ const ExchangeDetails = () => {
             <div className="grid gap-1 grid-cols-2 my-1">
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`${Data?.facebook_url}`}>
+                href={`${exchangeDetails?.facebook_url}`}
+              >
                 Facebook
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`https://www.twitter.com/${Data?.twitter_handle}`}>
+                href={`https://www.twitter.com/${exchangeDetails?.twitter_handle}`}
+              >
                 Twitter
               </a>
             </div>
@@ -229,7 +188,7 @@ const ExchangeDetails = () => {
             <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Centralized: </span>
               <span className=" btn text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
-                {Data?.centralized ? "True" : "False"}
+                {exchangeDetails?.centralized ? "True" : "False"}
               </span>
             </div>
           </div>
@@ -237,7 +196,7 @@ const ExchangeDetails = () => {
             <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Country: </span>
               <span className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
-                {Data?.country}
+                {exchangeDetails?.country}
               </span>
             </div>
           </div>
@@ -253,19 +212,19 @@ const ExchangeDetails = () => {
           <div className=" mt-1 d-flex align-items-center">
             <img
               className="w-8 mr-2 rounded-circle"
-              src={Data?.image}
-              alt={Data?.name}
+              src={exchangeDetails?.image}
+              alt={exchangeDetails?.name}
             />
-            <h2 className="font-bold text-xl">{Data?.name}</h2>
+            <h2 className="font-bold text-xl">{exchangeDetails?.name}</h2>
           </div>
           <div className="mt-3 d-flex  justify-content-start align-items-center">
             <h5 className="font-bold text-3xl">
               Trading incentive:{" "}
-              {Data?.has_trading_incentive ? "True" : "False"}
+              {exchangeDetails?.has_trading_incentive ? "True" : "False"}
             </h5>
           </div>
           <div className=" mt-1 d-flex align-items-center">
-            <small>Established {Data?.year_established}</small>
+            <small>Established {exchangeDetails?.year_established}</small>
           </div>
           <div className="mt-1 d-flex align-items-center">
             <button type="button" className="btn btn-light m-1">
@@ -285,30 +244,12 @@ const ExchangeDetails = () => {
     );
   };
 
-  const NoCoinData = () => {
-    return (
-      <div className="card text-center">
-        <div className="card-header">No Data Found</div>
-        <div className="card-body">
-          <h5 className="card-title">Special title treatment</h5>
-          <p className="card-text">
-            With supporting text below as a natural lead-in to additional
-            content.
-          </p>
-          <a className="btn btn-primary btn-sm " href="/" role="button">
-            Home
-          </a>
-        </div>
-      </div>
-    );
-  };
-
   const ExchangesData = () => {
     return (
       <div className=" col-12 p-3 m-2 rounded bg-light">
         <div className=" d-flex justify-content-between align-items-center">
           <div>
-            <span className=" h4">{Data?.name} Volume Chart </span>
+            <span className=" h4">{exchangeDetails?.name} Volume Chart </span>
           </div>
           <div>
             <ul className="nav d-flex justify-content-between align-items-center">
@@ -316,7 +257,8 @@ const ExchangeDetails = () => {
                 <li
                   key={item}
                   className="nav-item btn border  m-1"
-                  onClick={selectDays}>
+                  onClick={selectDays}
+                >
                   {item}
                 </li>
               ))}
@@ -326,15 +268,15 @@ const ExchangeDetails = () => {
 
         <div>
           <div className="col-12">
-            <ExchangeCharts
-              label={exchangeDetails?.map((item) =>
+          {chartData&&  <ExchangeCharts
+              label={chartData?.map((item) =>
                 moment(item[0]).format("MM/DD/YYYY")
               )}
               title={"Volumes Data Charts"}
-              dataSetlabel={currency}
-              ChartData={exchangeDetails?.map(
-                (item) => item[1]
-              )}></ExchangeCharts>
+              dataSetlabel={value.name}
+              ChartData={chartData?.map((item) => item[1])}
+            >
+            </ExchangeCharts>}
           </div>
         </div>
       </div>
@@ -348,11 +290,10 @@ const ExchangeDetails = () => {
 
         <div className="col-md-9 ml-sm-auto p-0 col-lg-10 ">
           <article className=" p-0 rounded-4 container ">
-            {Data === null ? (
-              <NoCoinData></NoCoinData>
+            {exchangeDetails === null ? (
+              <Nodata title={"No Exchange Data Found"} />
             ) : (
               <div className=" container bg-black py-1">
-                <div className="error">{error}</div>
                 <React.Fragment>{<InfoCard />}</React.Fragment>
                 <ExchangesData></ExchangesData>
                 <React.Fragment>

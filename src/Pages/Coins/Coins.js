@@ -49,7 +49,7 @@ const Coins = () => {
 
             <div className="container p-5 d-flex justify-content-center align-items-center">
               <Stack spacing={2}>
-                <Pagination count={100} page={page} onChange={handleChange} />
+                <Pagination count={10} page={page} onChange={handleChange} />
               </Stack>
             </div>
           </div>

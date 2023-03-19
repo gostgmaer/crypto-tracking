@@ -4,8 +4,8 @@ import Home from "../../Pages/HomePage/Home";
 
 import Exchanges from "../../Pages/Exchange/Exchanges";
 import Coins from "../../Pages/Coins/Coins";
-import CoinDetails from "../../Pages/Coins/CoinDetails";
-import ExchangeDetails from "../../Pages/Exchange/ExchangeDetails";
+import CoinDetails from "../../Pages/Coins/CoinDetails/CoinDetails";
+import ExchangeDetails from "../../Pages/Exchange/exchangeDetails/ExchangeDetails";
 import Profile from "../../Pages/Profile/Profile";
 import Login from "../../Pages/Profile/Login";
 import Registration from "../../Pages/Profile/Registration";
