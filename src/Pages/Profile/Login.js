@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaGoogle, FaReact, FaGithub } from "react-icons/fa";
 import { Circles } from "react-loader-spinner";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGlobalAuth } from "../../Context/Auth/globalAuthContext";
 import AuthInvokeAPI from "../../Utils/ApiCall/AuthInvoke";
 
@@ -9,8 +9,22 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const nagivate = useNavigate()
+
   
   const {updateUser,user,loginHandler} = useGlobalAuth()
+const LoginClick = (params) => {
+ try {
+  loginHandler()
+  nagivate('/')
+ } catch (error) {
+  console.log(error);
+  nagivate('/')
+ }
+  
+}
+
+
 
  
 

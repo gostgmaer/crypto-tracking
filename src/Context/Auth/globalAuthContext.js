@@ -1,5 +1,6 @@
 import jwtDecode from "jwt-decode";
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthInvokeAPI from "../../Utils/ApiCall/AuthInvoke";
 import { useGlobalRestApiContext } from "../AppContext/GlobalApiCallContext";
 const AuthContext = React.createContext(null);
@@ -7,6 +8,7 @@ const AuthContext = React.createContext(null);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
+ 
   // const {loading,setLoading} = useGlobalRestApiContext()
 
   const checkIfLogedIn = () => {
@@ -14,15 +16,19 @@ const AuthProvider = ({ children }) => {
     if (window.sessionStorage.getItem("user")) {
         const currentUser = JSON.parse(window.sessionStorage.getItem("user"));
         // setUser(JSON.parse(currentUser))
-        console.log(currentUser);
+    
         setUser(jwtDecode(currentUser?.access_token));
-        console.log(user);
+       
     }
 
     setAuthLoading(false)
    
   };
 
+  const logOutHandler =()=>{
+    window.sessionStorage.removeItem("user");
+    setUser(null)
+  }
   const loginHandler = async (val) => {
     setAuthLoading(true)
     const obj = {
@@ -38,16 +44,21 @@ const AuthProvider = ({ children }) => {
       grant_type: "password",
       provider_type: "ldap-internal",
     };
+   try {
     const res = await AuthInvokeAPI(
       "userauth/authservice/session",
       "post",
       bodyObj,
       {}
     );
-    console.log(res);
+   
     window.sessionStorage.setItem("user", JSON.stringify(res));
     setUser(jwtDecode(res.access_token));
-    console.log(user);
+  
+   
+   } catch (error) {
+    console.log(error);
+   }
     setAuthLoading(false)
   };
 
@@ -61,7 +72,7 @@ const AuthProvider = ({ children }) => {
         updateUser,
         user,
         loginHandler,
-        checkIfLogedIn,authLoading
+        checkIfLogedIn,authLoading,logOutHandler
       }}
     >
       {children}
