@@ -13,23 +13,19 @@ import UnProtectedRoute from "./Utils/Router/UnProtectedRoute";
 
 function App() {
   const { loading } = useGlobalRestApiContext();
-  const { updateUser, user,setUser,checkIfLogedIn } = useGlobalAuth();
-
-
+  const { updateUser,authLoading, user, setUser, checkIfLogedIn } = useGlobalAuth();
 
   useEffect(() => {
-    checkIfLogedIn()
-  
-   
+    checkIfLogedIn();
   }, []);
-
 
   return (
     <BrowserRouter>
       <div className="App">
         {user ? <Router></Router> : <UnProtectedRoute />}
       </div>
-      {loading && <Circularprogress />}
+      {loading &&  <Circularprogress />}
+      {authLoading && <Circularprogress />}
       <ToastContainer></ToastContainer>
     </BrowserRouter>
   );

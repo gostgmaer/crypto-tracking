@@ -3,107 +3,62 @@ import {
   FaArrowDown,
   FaArrowUp,
   FaCopy,
-  FaDollarSign,
-  FaRupeeSign,
   FaShare,
-  FaTrophy,
   FaStar,
 } from "react-icons/fa";
-import "./style.scss";
-import { DaysData } from "./COinData";
-import {} from "react-icons/";
+import { DaysData } from "../COinData";
 import { MdNotificationsNone } from "react-icons/md";
-import { Bars, Circles, TailSpin } from "react-loader-spinner";
 import { Link, useParams } from "react-router-dom";
-import MYChart from "../../Components/Charts/Charts";
-import useFetch from "../../Context/UseFetch/Usefetch";
-import CoinDetailsChart from "./CoinDetailsChart";
-import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
-import currencyToSymbolMap from 'currency-symbol-map/map'
+import CoinDetailsChart from "../CoinDetailsChart";
+import currencyToSymbolMap from "currency-symbol-map/map";
 import moment from "moment/moment";
-import LineChartWithLabel from "./LineChartWithLabel";
-import Sidebar from "../../Components/Sidebar/Sidebar";
-import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
+import LineChartWithLabel from "../LineChartWithLabel";
+import Sidebar from "../../../Components/Sidebar/Sidebar";
+import { useGlobalRestApiContext } from "../../../Context/AppContext/GlobalApiCallContext";
+import { Box } from "@mui/material";
 // import { Data } from "./COinData";
 
 const CoinDetails = () => {
   const {
-    crypto,
     cryptoDetails,
-    exchanges,
-    exchangeDetails,
+
     chartData,
-    error,
-    getCoinList,
+
     getCoinDetails,
-    getExchangeDetails,
-    getExchangeList,
+
     getMarketChert,
-    inputValue,
-    setInputValue,
+
     value,
-    setValue,
   } = useGlobalRestApiContext();
 
   // const [value?.name, setvalue?.name] = useState("USD");
   // const [coinDetails, setCoinDetails] = useState(null);
   const [newloading, setNewloading] = useState(true);
   const [openTab, setOpenTab] = useState(0);
-  const [days, setdays] = useState('90');
+  const [days, setdays] = useState("90");
   const id = useParams().id;
-
-  // console.log(Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[0]);
-  // const { Data, loading, error } = useFetch(`coins/${id}`, "get", "", "", {
-  //   tickers: true,
-  //   market_data: true,
-  //   community_data: true,
-  //   developer_data: true,
-  //   sparkline: true,
-  // });
-  const currency = Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)
+  const currency = Object.entries(currencyToSymbolMap).find(
+    (item) => item["0"] === value.code
+  );
   console.log(currency);
 
   const selectDays = (e) => {
     let data = e.target.innerHTML;
-    data === "24H" && setdays('1');
+    data === "24H" && setdays("1");
     if (data === "7d" || data === "14d" || data === "30d" || data === "90d") {
       data = data.replace("d", "");
-      // console.log(data);
       setdays(data);
-    }else{
-      setdays("max")
+    } else {
+      setdays("max");
     }
-    // data === "max" && 
-    //  console.log(data);
-    // console.log(days);
   };
   useEffect(() => {
-    getMarketChert({time:days},id,'coins')
-  }, [days,id]);
+    getMarketChert({ time: days }, id, "coins",'market_chart');
+  }, [days, id]);
 
   useEffect(() => {
-    getCoinDetails({},id)
+    getCoinDetails({}, id);
   }, [id]);
-
-  // const coinMarket = async () => {
-  //   const res = await InvokeAPI(`coins/${id}/market_chart`, "get", "", "", {
-  //     vs_value?.name: value?.name,
-  //     days: days,
-  //     interval: "daily",
-  //   });
-  //   setCoinDetails(res);
-  //   setNewloading(false);
-  // };
-
-  // let marketData;
-  // useEffect(() => {
-  //   //  marketData = cryptoDetails?.market_data;
-  //   coinMarket();
-  // }, [id, days, value?.name]);
-
-  // cryptoDetails?.market_caps?.forEach(element => {
-  // element[0]= moment(element[0]).format("MM/DD/YYYY");
-  // console.log(element)})
 
   const CoinTabs = () => {
     return (
@@ -115,7 +70,8 @@ const CoinDetails = () => {
               <button
                 onClick={() => setOpenTab(0)}
                 className={`nav-link m-2 ${openTab === 0 && "active"}`}
-                aria-current="page">
+                aria-current="page"
+              >
                 Prices History
               </button>
             </li>
@@ -123,7 +79,8 @@ const CoinDetails = () => {
               <button
                 onClick={() => setOpenTab(1)}
                 className={`nav-link m-2 ${openTab === 1 && "active"}`}
-                aria-current="page">
+                aria-current="page"
+              >
                 Market Caps
               </button>
             </li>
@@ -131,7 +88,8 @@ const CoinDetails = () => {
               <button
                 onClick={() => setOpenTab(2)}
                 className={`nav-link m-2 ${openTab === 2 && "active"}`}
-                aria-current="page">
+                aria-current="page"
+              >
                 Total Volumes History
               </button>
             </li>
@@ -142,7 +100,8 @@ const CoinDetails = () => {
                 <li
                   key={item}
                   className="nav-item btn border  m-1"
-                  onClick={selectDays}>
+                  onClick={selectDays}
+                >
                   {item}
                 </li>
               ))}
@@ -152,45 +111,42 @@ const CoinDetails = () => {
         <div>
           {openTab === 1 && (
             <div className="col-12">
-            <LineChartWithLabel
-                  label={chartData?.market_caps?.map((item) =>
-                    moment(item[0]).format("MM/DD/YYYY")
-                  )}
-                  title={"Market Capitalization Data"}
-                  dataSetlabel={value?.name}
-                  ChartData={chartData?.market_caps?.map(
-                    (item) => item[1]
-                  )}></LineChartWithLabel>
+              <LineChartWithLabel
+                label={chartData?.market_caps?.map((item) =>
+                  moment(item[0]).format("MM/DD/YYYY")
+                )}
+                title={"Market Capitalization Data"}
+                dataSetlabel={value?.name}
+                ChartData={chartData?.market_caps?.map((item) => item[1])}
+              ></LineChartWithLabel>
             </div>
           )}
         </div>
         <div>
           {openTab === 0 && (
             <div className="col-12">
-            <LineChartWithLabel
-                  label={chartData?.prices?.map((item) =>
-                    moment(item[0]).format("MM/DD/YYYY")
-                  )}
-                  title={"Price History Data"}
-                  dataSetlabel={value?.name}
-                  ChartData={chartData?.prices?.map(
-                    (item) => item[1]
-                  )}></LineChartWithLabel>
+              <LineChartWithLabel
+                label={chartData?.prices?.map((item) =>
+                  moment(item[0]).format("MM/DD/YYYY")
+                )}
+                title={"Price History Data"}
+                dataSetlabel={value?.name}
+                ChartData={chartData?.prices?.map((item) => item[1])}
+              ></LineChartWithLabel>
             </div>
           )}
         </div>
         <div>
           {openTab === 2 && (
             <div className="col-12">
-            <LineChartWithLabel
-                  label={chartData?.total_volumes?.map((item) =>
-                    moment(item[0]).format("MM/DD/YYYY")
-                  )}
-                  title={"Total Volumes Data"}
-                  dataSetlabel={value?.name}
-                  ChartData={chartData?.total_volumes?.map(
-                    (item) => item[1]
-                  )}></LineChartWithLabel>
+              <LineChartWithLabel
+                label={chartData?.total_volumes?.map((item) =>
+                  moment(item[0]).format("MM/DD/YYYY")
+                )}
+                title={"Total Volumes Data"}
+                dataSetlabel={value?.name}
+                ChartData={chartData?.total_volumes?.map((item) => item[1])}
+              ></LineChartWithLabel>
             </div>
           )}
         </div>
@@ -210,11 +166,14 @@ const CoinDetails = () => {
                   Market Cap
                 </h4>
                 <p className="font-semibold p-0 mb-0">
-              
                   <React.Fragment>
                     <span>{currency[1]}</span>
-                      {cryptoDetails?.market_data.market_cap[currency[0].toLowerCase()]}
-                    </React.Fragment>
+                    {
+                      cryptoDetails?.market_data.market_cap[
+                        currency[0].toLowerCase()
+                      ]
+                    }
+                  </React.Fragment>
                 </p>
               </div>
             </div>
@@ -224,9 +183,15 @@ const CoinDetails = () => {
                   24 Hour Trading Volume
                 </h4>
                 <p className="font-semibold mb-0">
-                 
                   <span>{currency[1]}</span>
-                     <span> {cryptoDetails?.market_data.total_volume[currency[0].toLowerCase()]}</span>
+                  <span>
+                    {" "}
+                    {
+                      cryptoDetails?.market_data.total_volume[
+                        currency[0].toLowerCase()
+                      ]
+                    }
+                  </span>
                 </p>
               </div>
             </div>
@@ -236,9 +201,15 @@ const CoinDetails = () => {
                   Fully Diluted Valuation
                 </h4>
                 <p className="font-semibold mb-0">
-                 
                   <span>{currency[1]}</span>
-                     <span> {cryptoDetails?.market_data.fully_diluted_valuation[currency[0].toLowerCase()]}</span>
+                  <span>
+                    {" "}
+                    {
+                      cryptoDetails?.market_data.fully_diluted_valuation[
+                        currency[0].toLowerCase()
+                      ]
+                    }
+                  </span>
                 </p>
               </div>
             </div>
@@ -248,9 +219,11 @@ const CoinDetails = () => {
                   Circulating Supply
                 </h4>
                 <p className="font-semibold mb-0">
-                
                   <span>{currency[1]}</span>
-                     <span> {cryptoDetails?.market_data.circulating_supply.toFixed(2)}</span>
+                  <span>
+                    {" "}
+                    {cryptoDetails?.market_data.circulating_supply.toFixed(2)}
+                  </span>
                 </p>
               </div>
             </div>
@@ -260,9 +233,15 @@ const CoinDetails = () => {
                   24h High
                 </h4>
                 <p className="font-semibold mb-0">
-                
                   <span>{currency[1]}</span>
-                     <span> {cryptoDetails?.market_data.high_24h[currency[0].toLowerCase()]}</span>
+                  <span>
+                    {" "}
+                    {
+                      cryptoDetails?.market_data.high_24h[
+                        currency[0].toLowerCase()
+                      ]
+                    }
+                  </span>
                 </p>
               </div>
             </div>
@@ -272,9 +251,15 @@ const CoinDetails = () => {
                   24h Low
                 </h4>
                 <p className="font-semibold mb-0">
-                
                   <span>{currency[1]}</span>
-                     <span> {cryptoDetails?.market_data.low_24h[currency[0].toLowerCase()]}</span>
+                  <span>
+                    {" "}
+                    {
+                      cryptoDetails?.market_data.low_24h[
+                        currency[0].toLowerCase()
+                      ]
+                    }
+                  </span>
                 </p>
               </div>
             </div>
@@ -288,12 +273,14 @@ const CoinDetails = () => {
       <React.Fragment>
         {" "}
         <h1 className="text-2xl font-semibold mt-8 mb-4">
-          About {cryptoDetails?.name} ({cryptoDetails?.symbol.toLocaleUpperCase()})
+          About {cryptoDetails?.name} (
+          {cryptoDetails?.symbol.toLocaleUpperCase()})
         </h1>
         <div
           dangerouslySetInnerHTML={{ __html: cryptoDetails?.description.en }}
           style={{ whiteSpace: "pre-wrap" }}
-          className="text-break text-light text-start"></div>
+          className="text-break text-light text-start"
+        ></div>
       </React.Fragment>
     );
   };
@@ -310,7 +297,8 @@ const CoinDetails = () => {
             <div className="my-1">
               <a
                 className="text-decoration-none rounded-2 bg-light link-dark px-3 py-1"
-                href={cryptoDetails?.links?.homepage[0]}>
+                href={cryptoDetails?.links?.homepage[0]}
+              >
                 Official site
               </a>
             </div>
@@ -322,22 +310,26 @@ const CoinDetails = () => {
             <div className="grid gap-1 grid-cols-2 flex-wrap d-flex my-1">
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={cryptoDetails?.links.subreddit_url}>
+                href={cryptoDetails?.links.subreddit_url}
+              >
                 Reddit
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`https://www.facebook.com/${cryptoDetails?.links.facebook_username}`}>
+                href={`https://www.facebook.com/${cryptoDetails?.links.facebook_username}`}
+              >
                 Facebook
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`https://www.twitter.com/${cryptoDetails?.links.twitter_screen_name}`}>
+                href={`https://www.twitter.com/${cryptoDetails?.links.twitter_screen_name}`}
+              >
                 Twitter
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={cryptoDetails?.links.official_forum_url[0]}>
+                href={cryptoDetails?.links.official_forum_url[0]}
+              >
                 Forum
               </a>
             </div>
@@ -352,7 +344,8 @@ const CoinDetails = () => {
                   <a
                     key={index}
                     className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                    href={item}>
+                    href={item}
+                  >
                     Github
                   </a>
                 );
@@ -383,8 +376,11 @@ const CoinDetails = () => {
 
   const InfoCard = () => {
     return (
-      <div style={{gap:'10px'}} className=" d-flex col-12 justify-content-between">
-        <div className="d-block my-4 col-4  text-white p-3 text-start">
+      <div
+        style={{ gap: "10px" }}
+        className=" d-flex col-12 justify-content-between"
+      >
+        <div className="d-block my-4 col-8  text-white p-3 text-start">
           <div className=" mt-1 d-flex align-items-center">
             <img
               className="w-8 mr-2 rounded-circle"
@@ -395,26 +391,32 @@ const CoinDetails = () => {
               {cryptoDetails?.name}({cryptoDetails?.symbol.toUpperCase()})
             </h2>
           </div>
-          <div className="mt-3 d-flex  justify-content-start align-items-center">
-            <h1 className="font-bold text-3xl">
-              {/* {cryptoDetails?.market_data.current_price.usd} */}
-            <span>{currency[1]}</span>  {cryptoDetails?.market_data.current_price[currency[0].toLowerCase()]}
-            </h1>
-            {cryptoDetails?.market_cryptoDetails?.price_change_percentage_24h < 0 ? (
-              <div className="d-flex text-danger">
+          <div className="mt-3 d-flex gap-1  justify-content-start align-items-center">
+            <h3 className="font-bold text-3xl ">
+              <span>{currency[1]}</span>
+              {
+                cryptoDetails?.market_data.current_price[
+                  currency[0].toLowerCase()
+                ]
+              }
+            </h3>
+            <Box
+              className="d-flex"
+              color={
+                cryptoDetails?.market_data?.price_change_percentage_24h < 0
+                  ? "red"
+                  : "green"
+              }
+            >
+              {cryptoDetails?.market_data?.price_change_percentage_24h < 0 ? (
                 <FaArrowDown></FaArrowDown>
-                <span className="text-green-600 font-semibold text-[18px]">
-                  {cryptoDetails?.market_data.price_change_percentage_24h}%
-                </span>
-              </div>
-            ) : (
-              <div className=" d-flex text-success ">
+              ) : (
                 <FaArrowUp></FaArrowUp>
-                <span className="text-green-600 font-semibold text-[18px]">
-                  {cryptoDetails?.market_data.market_cap_change_percentage_24h}%
-                </span>
-              </div>
-            )}
+              )}
+              <span className="text-green-600 font-semibold text-[18px]">
+                {cryptoDetails?.market_data.price_change_percentage_24h}%
+              </span>
+            </Box>
           </div>
           <div className=" mt-1 d-flex align-items-center">
             <small>1 {cryptoDetails?.symbol.toLocaleUpperCase()}</small>
@@ -430,37 +432,61 @@ const CoinDetails = () => {
               <FaStar></FaStar>
             </button>
           </div>
-          <div className="mt-1 align-items-center">
+          <div className="mt-1 col-10 align-items-center">
+          <div className="allTime d-flex justify-content-between align-items-center">
+            <span> {currency[1]}{ cryptoDetails?.market_data.atl[
+                      currency[0].toLowerCase()
+                    ]}</span>
+                    <span> {currency[1]}{ cryptoDetails?.market_data.current_price[
+                      currency[0].toLowerCase()
+                    ]}</span>
+                    <span>{currency[1]}{ cryptoDetails?.market_data.ath[
+                      currency[0].toLowerCase()
+                    ]}</span>
+          </div>
             <input
               type="range"
-              value=
-                {cryptoDetails?.market_data.current_price[currency[0].toLowerCase()]}
-              
+              value={
+                cryptoDetails?.market_data.current_price[
+                  currency[0].toLowerCase()
+                ]
+              }
               className="form-range range-filed-data col-10"
-              max= {cryptoDetails?.market_data.ath[currency[0].toLowerCase()]}
+              max={cryptoDetails?.market_data.ath[currency[0].toLowerCase()]}
               id="customRange"
               onChange={() => {}}
               min={0}
             />
-            <div className=" d-flex col-10 justify-content-between align-items-center">
+            <div className=" d-flex  justify-content-between align-items-center">
               <div className="">
                 <span className="no-wrap">
-                <span>{currency[1]}</span> {cryptoDetails?.market_data.low_24h[currency[0].toLowerCase()]}
+                  <span>{currency[1]}</span>{" "}
+                  {
+                    cryptoDetails?.market_data.low_24h[
+                      currency[0].toLowerCase()
+                    ]
+                  }
                 </span>
               </div>
               <div className="">24H Range</div>
               <div className="text-right">
                 <span className="no-wrap">
-                <span>{currency[1]}</span>   {cryptoDetails?.market_data.high_24h[currency[0].toLowerCase()]}
+                  <span>{currency[1]}</span>{" "}
+                  {
+                    cryptoDetails?.market_data.high_24h[
+                      currency[0].toLowerCase()
+                    ]
+                  }
                 </span>
               </div>
             </div>
           </div>
-        </div>
-        <div className="col-4">
           <CoinDetailsChart
-            myData={cryptoDetails?.market_data.sparkline_7d.price}></CoinDetailsChart>
+            myData={cryptoDetails?.market_data.sparkline_7d.price}
+            title={""}
+          ></CoinDetailsChart>
         </div>
+
         <Details></Details>
       </div>
     );

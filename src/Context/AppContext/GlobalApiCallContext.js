@@ -43,7 +43,7 @@ const AppRestApiProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const getExchangeDetails = async (query, id) => {
+  const getExchangeDetails = async ( id) => {
     setLoading(true);
     setError(null);
     const param = {
@@ -52,6 +52,7 @@ const AppRestApiProvider = ({ children }) => {
       community_data: true,
       developer_data: true,
       sparkline: true,
+      vs_currency: value?.code ? value.code  : "usd"
     };
     try {
       const res = await InvokeExternalAPI(
@@ -122,7 +123,7 @@ const AppRestApiProvider = ({ children }) => {
 
   // }, []);
 
-  const getMarketChert = async (query, id, type) => {
+  const getMarketChert = async (query, id,change, type) => {
     setLoading(true);
     setError(null);
     const param = {
@@ -133,7 +134,7 @@ const AppRestApiProvider = ({ children }) => {
     cleanQueryparam(param);
     try {
       const res = await InvokeExternalAPI(
-        `${type}/${id}/market_chart`,
+        `${change}/${id}/${type}`,
         "get",
         "",
         {},
@@ -167,7 +168,7 @@ const AppRestApiProvider = ({ children }) => {
         currency,
         error,
         getCoinList,
-        getCoinDetails,
+        getCoinDetails,setLoading,
         getExchangeDetails,
         getExchangeList,
         getMarketChert,

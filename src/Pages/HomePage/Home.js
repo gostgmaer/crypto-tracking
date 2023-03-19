@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import { currencies } from "currencies.json";
 import React, { Fragment, useEffect, useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
@@ -13,7 +13,7 @@ import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
 import currencyToSymbolMap from 'currency-symbol-map/map'
 import { staticData } from "./Data";
 import "./Home.scss";
-const options = ['Option 1', 'Option 2'];
+
 const Home = () => {
   const {
     crypto,
@@ -29,29 +29,19 @@ const Home = () => {
     getMarketChert, inputValue, setInputValue, value, setValue,
   } = useGlobalRestApiContext();
 
-  const [currency, setCurrency] = useState("USD");
-  const [exchangesData, setExchangesData] = useState(null);
-  const [newLoading, setNewLoading] = useState(true);
-  const [count, setCount] = useState(1);
-  const [openCurrency, setOpenCurrency] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [Data, setData] = useState(null);
-  const [exchangeError, setexchangeError] = useState(null);
-  const [coinError, setCoinError] = useState(null);
-
-  const newCurrency = currencies.forEach(element => {
-    element['label'] = element.name
-
-  });
 
   // const newItem = Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)
   // console.log(newItem);
-
-
+// console.log(currencies);
+currencies.forEach(element => {
+  element['label']=element.name
+});
+// const newcurr = currencies.map(item=>item['label']===item.name)
+// console.log(newcurr);
   useEffect(() => {
     getExchangeList()
     getCoinList()
-    console.log(currencyToSymbolMap);
+
 
   }, [value?.code]);
 
@@ -93,33 +83,33 @@ const Home = () => {
                     </Link>
                   </td>
                   <td>
-                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.current_price}
+                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.current_price}
                   </td>
                   <td>
-                    {item.price_change_percentage_24h < 0 ? (
-                      <div className=" text-danger">
-                        <FaArrowDown></FaArrowDown>
+                  <Box color={item.price_change_percentage_24h < 0 ?'red':'green'}>
+                      { item?.price_change_percentage_24h < 0? <FaArrowDown/>:<FaArrowUp/>}
                         <span>
                           {item.price_change_percentage_24h.toFixed(2)} %
                         </span>
-                      </div>
-                    ) : (
-                      <div className=" text-success">
-                        <FaArrowUp></FaArrowUp>
+                      </Box>
+                   
+                  </td>
+                  <td>
+                    {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.total_volume}
+                  </td>
+                  <td>
+                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.market_cap}
+                  </td>
+                  <td>
+
+                  <Box color={item.market_cap_change_percentage_24h < 0 ?'red':'green'}>
+                      { item?.market_cap_change_percentage_24h < 0?<FaArrowDown/>:<FaArrowUp/>}
                         <span>
-                          {item.price_change_percentage_24h.toFixed(2)} %
+                          {item.market_cap_change_percentage_24h.toFixed(2)} %
                         </span>
-                      </div>
-                    )}
-                  </td>
-                  <td>
-                    {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.total_volume}
-                  </td>
-                  <td>
-                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)[1]} {item.market_cap}
-                  </td>
-                  <td>
-                    {item.market_cap_change_percentage_24h < 0 ? (
+                      </Box>
+
+                    {/* {item.market_cap_change_percentage_24h < 0 ? (
                       <div className=" text-danger">
                         <FaArrowDown></FaArrowDown>
                         <span>
@@ -133,10 +123,10 @@ const Home = () => {
                           {item.market_cap_change_percentage_24h.toFixed(2)} %
                         </span>
                       </div>
-                    )}
+                    )} */}
                   </td>
                   <td className="crypto-chirt">
-                    <MYChart myData={item.sparkline_in_7d.price}></MYChart>
+                    <MYChart title={''} myData={item.sparkline_in_7d.price}></MYChart>
                   </td>
                 </tr>
               );

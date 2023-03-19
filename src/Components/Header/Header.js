@@ -1,10 +1,20 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logo } from "../../Assets/StaticData/Data";
 import "./header.scss";
 import { MdLogin, MdLogout } from "react-icons/md";
 import { FaLockOpen, FaUser, FaUserAlt, FaUserEdit } from "react-icons/fa";
+import { useGlobalAuth } from "../../Context/Auth/globalAuthContext";
 const Header = () => {
+  const {logOutHandler,user} = useGlobalAuth()
+const navigate = useNavigate()
+
+
+
+  const updateLoginHandler = (params) => {
+    logOutHandler()
+    navigate('/')
+  }
   const headerNavData = [
     {
       id: 1,
@@ -95,12 +105,12 @@ const Header = () => {
             <div className="d-flex  text-light  align-items-center my-lg-0">
             
             
-              <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/login`}>
+           { user? <button onClick={logOutHandler} className="btn m-1 d-flex  btn-light align-items-center">
+               <MdLogout></MdLogout> Logout
+              </button>:  <Link className="btn m-1 d-flex  btn-light align-items-center" to={`/login`}>
                 <MdLogin></MdLogin> Login
               </Link>
-              <button className="btn m-1 d-flex  btn-light align-items-center">
-               <MdLogout></MdLogout> Logout
-              </button>
+             }
             </div>
           </div>
         </div>
