@@ -28,7 +28,6 @@ const Coins = () => {
     setValue,
   } = useGlobalRestApiContext();
 
-
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -43,7 +42,7 @@ const Coins = () => {
         <div className="row custom-skiliton">
           <Sidebar></Sidebar>
           <div className="col-md-9 col-lg-10 d-flex flex-wrap ml-sm-auto ">
-            {crypto?.map((item) => {
+            {crypto?.data?.map((item) => {
               return <Card key={item.id} {...item}></Card>;
             })}
 

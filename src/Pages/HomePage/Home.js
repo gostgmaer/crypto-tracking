@@ -7,17 +7,16 @@ import { Link, NavLink } from "react-router-dom";
 import MYChart from "../../Components/Charts/Charts";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
-import getSymbolFromCurrency from 'currency-symbol-map'
+import getSymbolFromCurrency from "currency-symbol-map";
 import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
-import currencyToSymbolMap from 'currency-symbol-map/map'
+import currencyToSymbolMap from "currency-symbol-map/map";
 import { staticData } from "./Data";
 import "./Home.scss";
 
 const Home = () => {
   const {
     crypto,
-    cryptoDetails,
     exchanges,
     exchangeDetails,
     chartData,
@@ -26,32 +25,34 @@ const Home = () => {
     getCoinDetails,
     getExchangeDetails,
     getExchangeList,
-    getMarketChert, inputValue, setInputValue, value, setValue,
+    getMarketChert,
+    inputValue,
+    setInputValue,
+    value,
+    setValue,
   } = useGlobalRestApiContext();
-
 
   // const newItem = Object.entries(currencyToSymbolMap).find(item => item['0'] === value.code)
   // console.log(newItem);
-// console.log(currencies);
-currencies.forEach(element => {
-  element['label']=element.name
-});
-// const newcurr = currencies.map(item=>item['label']===item.name)
-// console.log(newcurr);
+  // console.log(currencies);
+  currencies.forEach((element) => {
+    element["label"] = element.name;
+  });
+  // const newcurr = currencies.map(item=>item['label']===item.name)
+  // console.log(newcurr);
   useEffect(() => {
-    getExchangeList()
-    getCoinList()
-
-
+    getExchangeList();
+    getCoinList();
   }, [value?.code]);
-
-
 
   const Crypto = () => {
     return (
       <div className="table-responsive text-start table-currency">
         <h3>Top 10 Cryptocurrency</h3>
-        <table className="table table-hover table-borderless align-middle">
+       
+        {crypto?.data ? (
+          <>
+             <table className="table table-hover table-borderless align-middle">
           <thead className="table-light">
             <tr>
               <th># Coin</th>
@@ -64,9 +65,9 @@ currencies.forEach(element => {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {crypto?.map((item) => {
+            {crypto?.data?.map((item) => {
               return (
-                <tr className="" key={item.id}>
+                <tr className=" " style={{fontSize:'12px'}} key={item.id}>
                   <td>
                     <Link
                       to={`/coins/${item.id}`}
@@ -83,50 +84,70 @@ currencies.forEach(element => {
                     </Link>
                   </td>
                   <td>
-                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.current_price}
+                    {
+                      Object.entries(currencyToSymbolMap).find(
+                        (item) => item["0"] === value?.code
+                      )[1]
+                    }
+                    {item.current_price}
                   </td>
                   <td>
-                  <Box color={item.price_change_percentage_24h < 0 ?'red':'green'}>
-                      { item?.price_change_percentage_24h < 0? <FaArrowDown/>:<FaArrowUp/>}
-                        <span>
-                          {item.price_change_percentage_24h.toFixed(2)} %
-                        </span>
-                      </Box>
-                   
+                    <Box
+                      color={
+                        item.price_change_percentage_24h < 0 ? "red" : "green"
+                      }
+                    >
+                      {item?.price_change_percentage_24h < 0 ? (
+                        <FaArrowDown />
+                      ) : (
+                        <FaArrowUp />
+                      )}
+                      <span>
+                        {item.price_change_percentage_24h.toFixed(2)} %
+                      </span>
+                    </Box>
                   </td>
                   <td>
-                    {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.total_volume}
+                    {
+                      Object.entries(currencyToSymbolMap).find(
+                        (item) => item["0"] === value?.code
+                      )[1]
+                    }{" "}
+                    {item.total_volume}
                   </td>
                   <td>
-                  {Object.entries(currencyToSymbolMap).find(item => item['0'] === value?.code)[1]} {item.market_cap}
+                    {
+                      Object.entries(currencyToSymbolMap).find(
+                        (item) => item["0"] === value?.code
+                      )[1]
+                    }{" "}
+                    {item.market_cap}
                   </td>
                   <td>
+                    <Box
+                      color={
+                        item.market_cap_change_percentage_24h < 0
+                          ? "red"
+                          : "green"
+                      }
+                    >
+                      {item?.market_cap_change_percentage_24h < 0 ? (
+                        <FaArrowDown />
+                      ) : (
+                        <FaArrowUp />
+                      )}
+                      <span>
+                        {item.market_cap_change_percentage_24h.toFixed(2)} %
+                      </span>
+                    </Box>
 
-                  <Box color={item.market_cap_change_percentage_24h < 0 ?'red':'green'}>
-                      { item?.market_cap_change_percentage_24h < 0?<FaArrowDown/>:<FaArrowUp/>}
-                        <span>
-                          {item.market_cap_change_percentage_24h.toFixed(2)} %
-                        </span>
-                      </Box>
-
-                    {/* {item.market_cap_change_percentage_24h < 0 ? (
-                      <div className=" text-danger">
-                        <FaArrowDown></FaArrowDown>
-                        <span>
-                          {item.market_cap_change_percentage_24h.toFixed(2)} %
-                        </span>
-                      </div>
-                    ) : (
-                      <div className=" text-success">
-                        <FaArrowUp></FaArrowUp>
-                        <span>
-                          {item.market_cap_change_percentage_24h.toFixed(2)} %
-                        </span>
-                      </div>
-                    )} */}
+                 
                   </td>
                   <td className="crypto-chirt">
-                    <MYChart title={''} myData={item.sparkline_in_7d.price}></MYChart>
+                    <MYChart
+                      title={""}
+                      myData={item.sparkline_in_7d.price}
+                    ></MYChart>
                   </td>
                 </tr>
               );
@@ -134,7 +155,8 @@ currencies.forEach(element => {
           </tbody>
           <tfoot></tfoot>
         </table>
-        {crypto ? <></> : (
+          </>
+        ) : (
           <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
         )}
       </div>
@@ -156,7 +178,7 @@ currencies.forEach(element => {
           </thead>
           <tbody className="table-group-divider">
             <Fragment>
-              {exchanges?.map((item) => {
+              {exchanges?.data?.map((item) => {
                 return (
                   <tr className="" key={item.id}>
                     <td>
@@ -195,18 +217,14 @@ currencies.forEach(element => {
                         <div className=" text-danger">
                           <FaArrowDown></FaArrowDown>
                           <span>
-                            {item.trade_volume_24h_btc_normalized.toFixed(
-                              2
-                            )}
+                            {item.trade_volume_24h_btc_normalized.toFixed(2)}
                           </span>
                         </div>
                       ) : (
                         <div className=" text-success">
                           <FaArrowUp></FaArrowUp>
                           <span>
-                            {item.trade_volume_24h_btc_normalized.toFixed(
-                              2
-                            )}
+                            {item.trade_volume_24h_btc_normalized.toFixed(2)}
                           </span>
                         </div>
                       )}
@@ -218,13 +236,14 @@ currencies.forEach(element => {
           </tbody>
           <tfoot></tfoot>
         </table>
-        {exchanges ? <></> : (
+        {exchanges?.data? (
+          <></>
+        ) : (
           <div className="text-center p-5 h5">{`No Data Found Please Try Again Later`}</div>
         )}
       </div>
     );
   };
-
 
   return (
     <div className="container-fluid">
@@ -236,45 +255,7 @@ currencies.forEach(element => {
             <h1 className="h2">Dashboard</h1>
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2"></div>
-              {/* <div className="dropdown ">
-                <button
-                  className={`btn btn-light dropdown-toggle ${openCurrency ? "show" : ""
-                    }`}
-                  type="button"
-                  onClick={() => setOpenCurrency(!openCurrency)}
-                  aria-expanded={openCurrency ? "true" : "false"}
-                >
-                  {currency}
-                </button>
-                <ul
-                  className={`dropdown-menu dropdown-menu-right ${openCurrency ? "show" : ""
-                    }`}
-                  style={
-                    openCurrency
-                      ? {
-                        position: "absolute",
-                        inset: `0px auto auto 0px`,
-                        margin: `0`,
-                        transform: ` translate(0px, 40px)`,
-                        minWidth: 75,
-                      }
-                      : {}
-                  }
-                >
-                  {staticData.newCurr.map((item) => {
-                    return (
-                      <li
-                        key={item.id}
-                        role="button"
-                        onClick={chengeCurrency}
-                        className="dropdown-item"
-                      >
-                        {item.currency_code}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div> */}
+
               <Autocomplete
                 value={value}
                 onChange={(event, newValue) => {
@@ -287,7 +268,9 @@ currencies.forEach(element => {
                 id="controllable-states-demo"
                 options={currencies}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Currencies" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="Currencies" />
+                )}
               />
             </div>
           </div>
