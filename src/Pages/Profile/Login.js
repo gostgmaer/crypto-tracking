@@ -18,7 +18,7 @@ const LoginClick = (params) => {
   loginHandler()
   nagivate('/')
  } catch (error) {
-  console.log(error);
+ 
   nagivate('/')
  }
   

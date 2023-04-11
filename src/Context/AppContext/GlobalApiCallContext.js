@@ -12,7 +12,7 @@ const AppRestApiProvider = ({ children }) => {
   const [cryptoDetails, setCryptoDetails] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
-  const [value, setValue] = React.useState({
+  const [value, setValue] =useState({
     name: "US Dollar",
     symbol: "$",
     symbolNative: "$",
@@ -22,11 +22,7 @@ const AppRestApiProvider = ({ children }) => {
     namePlural: "US dollars",
     label: "US Dollar",
   });
-  const [inputValue, setInputValue] = React.useState("US Dollar");
-
-  const updateLoader = () => {
-    setLoading(!loading);
-  };
+  const [inputValue, setInputValue] = useState("US Dollar");
   const getExchangeList = async (query) => {
     setLoading(true);
     setError(null);
@@ -38,7 +34,7 @@ const AppRestApiProvider = ({ children }) => {
       const res = await InvokeExternalAPI("exchanges", "get", "", {}, param);
       setExchanges(res);
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
     setLoading(false);
   };
@@ -64,13 +60,13 @@ const AppRestApiProvider = ({ children }) => {
       );
       setExchangeDetails(res);
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
     setLoading(false);
   };
 
   const getCoinList = async (query) => {
-    console.log(query);
+    
     setLoading(true);
     setError(null);
     const param = {
@@ -93,8 +89,8 @@ const AppRestApiProvider = ({ children }) => {
       );
       setCrypto(res);
     } catch (error) {
-      setError(error.message);
-      console.log(error.message);
+      setError(error);
+     
     }
     setLoading(false);
   };
@@ -113,15 +109,10 @@ const AppRestApiProvider = ({ children }) => {
       const res = await InvokeExternalAPI(`coins/${id}`, "get", "", {}, param);
       setCryptoDetails(res);
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
     setLoading(false);
   };
-
-  // useEffect(() => {
-  //   getExchangeList({})
-
-  // }, []);
 
   const getMarketChert = async (query, id,change, type) => {
     setLoading(true);
@@ -142,7 +133,7 @@ const AppRestApiProvider = ({ children }) => {
       );
       setChartData(res);
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
     setLoading(false);
   };

@@ -1,14 +1,7 @@
 import axios from "axios";
 import { baseURL } from "../../services/settings";
 
-const InvokeExternalAPI = async (
-  endpoint,
-  type,
-  body,
-  headerParams,
-  query
-) => {
-
+const InvokeExternalAPI = async (endpoint, type, body, headerParams, query) => {
   const option = {
     method: type,
     url: baseURL + endpoint,
@@ -17,17 +10,19 @@ const InvokeExternalAPI = async (
     data: body,
   };
   let response;
+  let error;
+
   try {
     response = await axios.request(option);
   } catch (e) {
-    throw new Error(e.message);
+    error = e;
   }
 
+  let res = { data: response?.data ? response?.data : null, error: error };
   // if success return value
-  return response?.data ? response?.data : null; // or set initial value
+  return res; // or set initial value
 };
 export default InvokeExternalAPI;
-
 
 export const cleanQueryparam = (query) => {
   return Object.keys(query).forEach(

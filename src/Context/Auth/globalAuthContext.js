@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
       pass: val.password,
       remember: val.remember,
     };
-    console.log(obj);
+   
     const bodyObj = {
       searchKey: "mail",
       searchVal: "varun.sengupta@inadev.com",
@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
   
    
    } catch (error) {
-    console.log(error);
+   
    }
     setAuthLoading(false)
   };

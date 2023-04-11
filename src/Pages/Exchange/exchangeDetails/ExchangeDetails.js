@@ -104,7 +104,7 @@ const ExchangeDetails = () => {
                   24 Hours Trade Volumes
                 </h4>
                 <p className="font-semibold p-0 mb-0">
-                {exchangeDetails?.trade_volume_24h_btc.toFixed(2)}
+                  {exchangeDetails?.data?.trade_volume_24h_btc.toFixed(2)}
                 </p>
               </div>
             </div>
@@ -114,9 +114,9 @@ const ExchangeDetails = () => {
                   24 Hours Normalization Volume
                 </h4>
                 <p className="font-semibold mb-0">
-                {exchangeDetails?.trade_volume_24h_btc_normalized.toFixed(
-                        2
-                      )}
+                  {exchangeDetails?.data?.trade_volume_24h_btc_normalized.toFixed(
+                    2
+                  )}
                 </p>
               </div>
             </div>
@@ -126,7 +126,7 @@ const ExchangeDetails = () => {
                   Trust Score
                 </h4>
                 <p className="font-semibold mb-0">
-                {exchangeDetails?.trust_score}
+                  {exchangeDetails?.data?.trust_score}
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ const ExchangeDetails = () => {
                   Trust Score Rank
                 </h4>
                 <p className="font-semibold mb-0">
-                {exchangeDetails?.trust_score_rank}
+                  {exchangeDetails?.data?.trust_score_rank}
                 </p>
               </div>
             </div>
@@ -158,7 +158,7 @@ const ExchangeDetails = () => {
             <div className="my-1">
               <a
                 className="text-decoration-none rounded-2 bg-light link-dark px-3 py-1"
-                href={exchangeDetails?.url}
+                href={exchangeDetails?.data?.url}
               >
                 Official site
               </a>
@@ -171,13 +171,13 @@ const ExchangeDetails = () => {
             <div className="grid gap-1 grid-cols-2 my-1">
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`${exchangeDetails?.facebook_url}`}
+                href={`${exchangeDetails?.data?.facebook_url}`}
               >
                 Facebook
               </a>
               <a
                 className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1"
-                href={`https://www.twitter.com/${exchangeDetails?.twitter_handle}`}
+                href={`https://www.twitter.com/${exchangeDetails?.data?.twitter_handle}`}
               >
                 Twitter
               </a>
@@ -188,7 +188,7 @@ const ExchangeDetails = () => {
             <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Centralized: </span>
               <span className=" btn text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
-                {exchangeDetails?.centralized ? "True" : "False"}
+                {exchangeDetails?.data?.centralized ? "True" : "False"}
               </span>
             </div>
           </div>
@@ -196,7 +196,7 @@ const ExchangeDetails = () => {
             <div className=" d-flex align-items-center justify-content-start">
               <span className=" me-2">Country: </span>
               <span className="text-decoration-none rounded-2 opacity-75 bg-light m-1 link-dark px-3 py-1">
-                {exchangeDetails?.country}
+                {exchangeDetails?.data?.country}
               </span>
             </div>
           </div>
@@ -212,19 +212,19 @@ const ExchangeDetails = () => {
           <div className=" mt-1 d-flex align-items-center">
             <img
               className="w-8 mr-2 rounded-circle"
-              src={exchangeDetails?.image}
-              alt={exchangeDetails?.name}
+              src={exchangeDetails?.data?.image}
+              alt={exchangeDetails?.data?.name}
             />
-            <h2 className="font-bold text-xl">{exchangeDetails?.name}</h2>
+            <h2 className="font-bold text-xl">{exchangeDetails?.data?.name}</h2>
           </div>
           <div className="mt-3 d-flex  justify-content-start align-items-center">
             <h5 className="font-bold text-3xl">
               Trading incentive:{" "}
-              {exchangeDetails?.has_trading_incentive ? "True" : "False"}
+              {exchangeDetails?.data?.has_trading_incentive ? "True" : "False"}
             </h5>
           </div>
           <div className=" mt-1 d-flex align-items-center">
-            <small>Established {exchangeDetails?.year_established}</small>
+            <small>Established {exchangeDetails?.data?.year_established}</small>
           </div>
           <div className="mt-1 d-flex align-items-center">
             <button type="button" className="btn btn-light m-1">
@@ -249,7 +249,9 @@ const ExchangeDetails = () => {
       <div className=" col-12 p-3 m-2 rounded bg-light">
         <div className=" d-flex justify-content-between align-items-center">
           <div>
-            <span className=" h4">{exchangeDetails?.name} Volume Chart </span>
+            <span className=" h4">
+              {exchangeDetails?.data?.name} Volume Chart{" "}
+            </span>
           </div>
           <div>
             <ul className="nav d-flex justify-content-between align-items-center">
@@ -268,15 +270,16 @@ const ExchangeDetails = () => {
 
         <div>
           <div className="col-12">
-          {chartData&&  <ExchangeCharts
-              label={chartData?.map((item) =>
-                moment(item[0]).format("MM/DD/YYYY")
-              )}
-              title={"Volumes Data Charts"}
-              dataSetlabel={value.name}
-              ChartData={chartData?.map((item) => item[1])}
-            >
-            </ExchangeCharts>}
+            {chartData?.data && (
+              <ExchangeCharts
+                label={chartData?.data?.map((item) =>
+                  moment(item[0]).format("MM/DD/YYYY")
+                )}
+                title={"Volumes Data Charts"}
+                dataSetlabel={value.name}
+                ChartData={chartData?.data?.map((item) => item[1])}
+              ></ExchangeCharts>
+            )}
           </div>
         </div>
       </div>
@@ -290,9 +293,7 @@ const ExchangeDetails = () => {
 
         <div className="col-md-9 ml-sm-auto p-0 col-lg-10 ">
           <article className=" p-0 rounded-4 container ">
-            {exchangeDetails === null ? (
-              <Nodata title={"No Exchange Data Found"} />
-            ) : (
+            {exchangeDetails?.data?  (
               <div className=" container bg-black py-1">
                 <React.Fragment>{<InfoCard />}</React.Fragment>
                 <ExchangesData></ExchangesData>
@@ -300,6 +301,8 @@ const ExchangeDetails = () => {
                   <MarketDataContainer />
                 </React.Fragment>
               </div>
+            ) : (
+              <Nodata title={"No Exchange Data Found"} />
             )}
           </article>
         </div>

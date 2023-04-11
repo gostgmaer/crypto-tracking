@@ -7,6 +7,7 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import { useGlobalRestApiContext } from "../../Context/AppContext/GlobalApiCallContext";
 import useFetch from "../../Context/UseFetch/Usefetch";
 import InvokeAPI from "../../Utils/ApiCall/InvokeAPI";
+import Notfound from "../NotFound/Notfound";
 
 const Exchanges = () => {
   const {
@@ -31,9 +32,9 @@ const Exchanges = () => {
   const [page, setPage] = React.useState(1);
 
   useEffect(() => {
-    getExchangeList({perPage:90,pageCount:page})
+    getExchangeList({ perPage: 90, pageCount: page });
   }, [page]);
- 
+
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -42,17 +43,21 @@ const Exchanges = () => {
       <div className="container-fluid">
         <div className="row custom-skiliton">
           <Sidebar></Sidebar>
-          <div className="col-md-9 col-lg-10 d-flex flex-wrap ml-sm-auto">
-            {exchanges?.map((item) => {
-              return <Card key={item.id} {...item}></Card>;
-            })}
+          {exchanges?.data ? (
+            <div className="col-md-9 col-lg-10 d-flex flex-wrap ml-sm-auto">
+              {exchanges?.data?.map((item) => {
+                return <Card key={item.id} {...item}></Card>;
+              })}
 
-            <div className="container p-5 d-flex justify-content-center align-items-center">
-              <Stack spacing={2}>
-                <Pagination count={10} page={page} onChange={handleChange} />
-              </Stack>
+              <div className="container p-5 d-flex justify-content-center align-items-center">
+                <Stack spacing={2}>
+                  <Pagination count={10} page={page} onChange={handleChange} />
+                </Stack>
+              </div>
             </div>
-          </div>
+          ) : (
+            <Notfound />
+          )}
         </div>
       </div>
     </Fragment>

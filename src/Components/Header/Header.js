@@ -24,17 +24,12 @@ const navigate = useNavigate()
     {
       id: 2,
       text: "Exchanges",
-      url: "exchanges",
+      url: "/exchanges",
     },
     {
       id: 3,
       text: "Coins",
-      url: "coins",
-    },
-    {
-      id: 4,
-      text: "Featured Item",
-      url: "Featured",
+      url: "/coins",
     }
    
   ];
@@ -85,22 +80,7 @@ const navigate = useNavigate()
                 );
               })}
 
-              <li className="nav-item dropdown">
-                <span className="nav-link  text-light dropdown-toggle">Others</span>
-                <div className="dropdown-menu">
-                  {headerOthers.map((item) => {
-                    return (
-                      <NavLink
-                        key={item.id}
-                        className="dropdown-item"
-                        to={item.url}
-                      >
-                        {item.text}
-                      </NavLink>
-                    );
-                  })}
-                </div>
-              </li>
+            
             </ul>
             <div className="d-flex  text-light  align-items-center my-lg-0">
             
